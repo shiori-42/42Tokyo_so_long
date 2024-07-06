@@ -1,12 +1,12 @@
 NAME = so_long
 
-CC = gcc
+CC = cc
 # CFLAGS = -Wall -Wextra -Werror -DGL_SILENCE_DEPRECATION -Iinclude
 CFLAGS = -Wall -Wextra -Werror -DGL_SILENCE_DEPRECATION -Iinclude -Wno-unused-but-set-variable
 
 MLX = -L. -lmlx -framework OpenGL -framework AppKit
 
-SRC = src/main.c src/game.c src/map.c src/graphics.c
+SRC = src/main.c src/game.c src/map.c src/graphics.c src/get_next_line.c src/get_next_line_utils.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
