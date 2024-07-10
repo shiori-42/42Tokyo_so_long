@@ -6,7 +6,7 @@
 /*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/06 21:31:10 by shiori           ###   ########.fr       */
+/*   Updated: 2024/07/06 23:44:32 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int load_map(const char *filename, t_map *map)
 
     fd = open(filename, O_RDONLY);
     if (fd == -1)
+    {
+        perror("Error opening file");
         return (1);
+    }
     map->x = 0;
     map->y = 0;
     line = get_next_line(fd);
@@ -57,6 +60,7 @@ int load_map(const char *filename, t_map *map)
         line = get_next_line(fd);
         if (!line)
         {            
+            fprintf(stderr, "Error reading line %d\n", i);
             close(fd);
             return (1);
         }
