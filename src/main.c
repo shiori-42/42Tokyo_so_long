@@ -6,7 +6,7 @@
 /*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/10 20:53:51 by shiori           ###   ########.fr       */
+/*   Updated: 2024/07/10 22:55:48 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,16 @@ int main(void) {
         write(2, "Error: invalid map\n", 19);
         exit(1);
     }
-    game.win = mlx_new_window(game.mlx,game.map.y * 32, game.map.x * 32, "So Long");
+    int tile_size;
+    tile_size = 32;
+    game.win = mlx_new_window(game.mlx, game.map.x * tile_size, game.map.y * tile_size, "So Long");
     if (game.win == NULL)
     {
         write(2, "Error: failed to create window\n", 31);	
         return (1);
     }
     init_game(&game);
+    mlx_key_hook(game.win, handle_keypress, &game);
     mlx_loop(game.mlx);
     return (0);
 }

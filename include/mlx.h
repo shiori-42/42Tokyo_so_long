@@ -131,8 +131,7 @@ int	mlx_destroy_image(void *mlx_ptr, void *img_ptr);
 **    can be hooked. Some macro and defines from X11/X.h are needed here.
 */
 
-int	mlx_hook(void *win_ptr, int x_event, int x_mask,
-                 int (*funct)(), void *param);
+int mlx_key_hook(void *win_ptr, int (*funct_ptr)(), void *param);
 
 int     mlx_mouse_hide();
 int     mlx_mouse_show();
