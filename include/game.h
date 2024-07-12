@@ -6,7 +6,7 @@
 /*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:20:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/10 22:04:45 by shiori           ###   ########.fr       */
+/*   Updated: 2024/07/11 19:18:19 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ typedef struct s_game {
     void *player_texture;	
     void *items_texture;	
     void *exit_texture;
+    int move_cnt;
+    int window_width;
+    int window_height;
+    int     map_x;
+    int     map_y;
+    int tile_size;
     t_map   map;
 } t_game;
 
@@ -40,5 +46,6 @@ typedef struct s_game {
 void init_game(t_game *game);
 void render_map(t_game *game);
 int handle_keypress(int keycode,t_game *game);
+void calculate_tile_size(t_game *game);
 
 #endif
