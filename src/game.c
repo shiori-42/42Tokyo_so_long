@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/15 19:37:47 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:02:00 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,51 @@ void	calculate_tile_size(t_game *game)
 	else
 		game->tile_size = tile_height;
 }
-
-void	init_game(t_game *game)
+void	load_img(t_game *game)
 {
-	int		x;
-	int		y;
-	int		width;
-	int		height;
-	char	*wall_xpm;
-	char	*empty_xpm;
-	char	*player_xpm;
-	char	*collectible_xpm;
-	char	*exit_xpm;
+	wall_xpm = "assets/wall.xpm";
+	empty_xpm = "assets/empty.xpm";
+	player_xpm = "assets/player.xpm";
+	collectible_xpm = "assets/collectible.xpm";
+	exit_xpm = "assets/exit.xpm";
+	game->img_wall = mlx_xpm_file_to_image(game->mlx_ptr, wall_xpm, &width,
+			&height);
+	game->img_empty = mlx_xpm_file_to_image(game->mlx_ptr, empty_xpm, &width,
+			&height);
+	game->img_player = mlx_xpm_file_to_image(game->mlx_ptr, player_xpm, &width,
+			&height);
+	game->img_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
+			collectible_xpm, &width, &height);
+	game->img_exit = mlx_xpm_file_to_image(game->mlx_ptr, exit_xpm, &width,
+			&height);
+	if (!game->img_wall || !game->img_empty || !game->img_player
+		|| !game->img_collectible || !game->img_exit)
+	{
+		write(2, "Error: Failed to load textures\n", 31);
+		exit(EXIT_FAILURE);
+	}
+}
 
-	game->move_cnt = 0;
-	calculate_tile_size(game);
+void	ft_initialize(t_game *game, t_map *map)
+{
+	int	y;
+	int	x;
+
+	game->map = map;
 	game->collected = 0;
+	calculate_tile_size(game);
 	y = 0;
-	while (y < game->map.y)
+	while (y < game->map->y)
 	{
 		x = 0;
-		while (x < game->map.x)
+		while (x < game->map->x)
 		{
-			if (game->map.data[y][x] == 'P')
+			if (game->map->data[y][x] == 'P')
 			{
 				game->player_x = x;
 				game->player_y = y;
 			}
-			else if (game->map.data[y][x] == 'C')
+			else if (game->map->data[y][x] == 'C')
 			{
 				game->collected++;
 			}
@@ -62,24 +79,14 @@ void	init_game(t_game *game)
 	if (!game->mlx_ptr)
 	{
 		write(2, "Error: MLX initialization failed\n", 32);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-	wall_xpm = "assets/wall.xpm";
-	empty_xpm = "assets/empty.xpm";
-	player_xpm = "assets/player.xpm";
-	collectible_xpm = "assets/collectible.xpm"; 
-	exit_xpm = "assets/exit.xpm";
-	game->img_wall = mlx_xpm_file_to_image(game->mlx_ptr, wall_xpm, &width,
-			&height);
-	game->img_empty= mlx_xpm_file_to_image(game->mlx_ptr, empty_xpm, &width,
-			&height);
-	game->img_player = mlx_xpm_file_to_image(game->mlx_ptr, player_xpm, &width,
-			&height);
-	game->img_collectible = mlx_xpm_file_to_image(game->mlx_ptr, collectible_xpm, &width,
-			&height);
-	game->img_exit = mlx_xpm_file_to_image(game->mlx_ptr, exit_xpm, &width,
-			&height);
+	load_textures(game);
 	render_map(game);
+}
+void	init_game(t_game *game)
+{
+	ft_initialize(game, game->map);
 }
 
 int	handle_keypress(int keycode, t_game *game)
@@ -155,8 +162,11 @@ void	render_map(t_game *game)
 	}
 }
 
-int on_destroy(t_game *game){
-	mlx_destroy_window(game->mlx_ptr,game->win_ptr);
+int	on_destroy(t_game *game)
+{
+	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
+	mlx_destroy_display(game->mlx_ptr);
+	free(game->mlx_ptr);
 	exit(0);
-	return(0);
+	return (0);
 }

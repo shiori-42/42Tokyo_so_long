@@ -6,34 +6,71 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/15 20:23:53 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:23:26 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	main(void)
+void	handle_error(t_game *game, char *str, int num)
 {
-	t_game	game;
+	if (num)
+	{
+		free_double_pointer(game);
+	}
+	ft_putstr_fd(str, 2);
+	exit(1);
+}
+
+int	ft_exit(t_game *game)
+{
+	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
+	printf("GAME OVER :(\n");
+	free_double_pointer(game->map->data);
+	exit(1);
+}
+
+int	main(int argc, char **argv)
+{
+	t_game game;
+	
+	if (argc < 2)
+	{
+		fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+		return (EXIT_FAILURE);
+	}
+
+	check_file_name(argv[1]);
 
 	game.mlx_ptr = mlx_init();
 	if (!game.mlx_ptr)
-		return (1);
-	game.win_ptr = mlx_new_window(game.mlx_ptr, 800, 600, "So Long");
-	if (!game.win_ptr)
-		return (free(game.mlx_ptr), 1);
-	game.map = read_map("maps/map1.ber");
-	if (!game.map.data || validate_map(&game.map) != 0)
 	{
-		write(2, "Error: invalid map\n", 19);
+		write(2, "Error: MLX initialization failed\n", 32);
 		return (1);
 	}
-	game.window_width = 800;
-	game.window_height = 600;
-	if (game.win_ptr == NULL)
-		init_game(&game);
+
+	game.win_ptr = mlx_new_window(game.mlx_ptr, 800, 600, "So Long");
+	if (!game.win_ptr)
+	{
+		write(2, "Error: Window creation failed\n", 31);
+		free(game.mlx_ptr);
+		return (1);
+	}
+	cnt_map_size(argv[1],&game->map);
+	if (validate_map(&game->map))
+	{
+		write(2, "Error: Map validation failed\n", 40);
+		return (1);
+	}
+	if (allocate_map_and_load(argv[1], &map) || validate_map(&map))
+	{
+		write(2, "Error: Map loading  failed\n", 40);
+		return (1);
+	}
+	init_game(&game);
+	check_path(&(game->map->data))
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win_ptr, 17, 1L << 17, on_destroy, &game);
 	mlx_loop(game.mlx_ptr);
-	return (0);
+	return (EXIT_SUCCESS);
 }

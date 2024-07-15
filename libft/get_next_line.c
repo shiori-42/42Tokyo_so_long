@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/11 23:13:15 by syonekur          #+#    #+#             */
-/*   Updated: 2023/11/29 22:47:24 by syonekur         ###   ########.fr       */
+/*   Created: 2024/07/10 15:52:07 by shiori            #+#    #+#             */
+/*   Updated: 2024/07/14 15:58:53 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ char	*get_line(char **string)
 	char	*new_string;
 	char	*newline_pos;
 
-	newline_pos = ft_strchr(*string, '\n');
+	newline_pos = ft_strchr_for_gnl(*string, '\n');
 	if (newline_pos)
 	{
-		new_string = ft_strdup(newline_pos + 1);
+		new_string = ft_strdup_for_gnl(newline_pos + 1);
 		*(newline_pos + 1) = '\0';
-		line = ft_strdup(*string);
+		line = ft_strdup_for_gnl(*string);
 		free(*string);
 		*string = new_string;
 	}
@@ -56,7 +56,7 @@ ssize_t	read_from_fd(int fd, char **string)
 	while (read_bytes > 0)
 	{
 		buffer[read_bytes] = '\0';
-		tmp = ft_strjoin(*string, buffer);
+		tmp = ft_strjoin_for_gnl(*string, buffer);
 		if (!tmp)
 		{
 			free(buffer);
@@ -64,7 +64,7 @@ ssize_t	read_from_fd(int fd, char **string)
 		}
 		ft_strdel(string);
 		*string = tmp;
-		if (ft_strchr(buffer, '\n'))
+		if (ft_strchr_for_gnl(buffer, '\n'))
 			break ;
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 	}
@@ -85,7 +85,7 @@ char	*get_next_line(int fd)
 		ft_strdel(&string);
 		return (NULL);
 	}
-	if (read_bytes == 0 && ft_strlen_s(string) == 0)
+	if (read_bytes == 0 && ft_strlen_s_for_gnl(string) == 0)
 	{
 		ft_strdel(&string);
 		return (NULL);

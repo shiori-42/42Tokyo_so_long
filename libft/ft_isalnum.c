@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/11 23:09:03 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/06 21:20:59 by shiori           ###   ########.fr       */
+/*   Created: 2023/09/19 23:19:20 by syonekur          #+#    #+#             */
+/*   Updated: 2024/07/05 14:47:04 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include <fcntl.h>
-# include <limits.h>
-# include <stdlib.h>
-# include <unistd.h>
+int	ft_isalnum(int c)
+{
+	return (ft_isalpha(c) || ft_isdigit(c));
+}
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
-
-char	*get_next_line(int fd);
-size_t	ft_strlen_s(char *s);
-char	*ft_strjoin(char *s1, char *s2);
-char	*ft_strchr(char *s, int c);
-char	*ft_strdup(char *s1);
-
-#endif
+// int	main(void)
+// {
+// 	for (int i = 0; i < UCHAR_MAX; ++i)
+// 	{
+// 		if (ft_isalnum(i))
+// 		{
+// 			printf("%c(%d)\n", i, i);
+// 		}
+// 	}
+// }
