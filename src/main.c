@@ -3,51 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/12 14:27:46 by shiori           ###   ########.fr       */
+/*   Updated: 2024/07/15 19:39:57 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "game.h"
+#include "so_long.h"
 
+int	main(void)
+{
+	t_game	game;
 
-int main(void) {
-    t_game game;
-
-    game.mlx = mlx_init();
-    if (game.mlx == NULL)
-    {
-        write(2, "Error: failed to initialize mlx\n", 32);	
-        return (1);	
-    }
-    if (load_map("maps/map1.ber", &(game.map))!=0)
-    {
-        write(2, "Error: failed to load map\n", 26);
-        exit(1);
-    }
-    if (validate_map(&(game.map))!=0)
-    {
-        write(2, "Error: invalid map\n", 19);
-        exit(1);
-    }
-    game.window_width=800;
-    game.window_height=600;
-    game.win = mlx_new_window(game.mlx, game.window_width, game.window_height, "So Long");
-    if (game.win == NULL)
-    {
-        write(2, "Error: failed to create window\n", 31);	
-        return (1);
-    }
-    init_game(&game);
-    mlx_key_hook(game.win, handle_keypress, &game);
-    // mlx_hook(game.win,17,0,(void*)exit,0);
-    mlx_loop(game.mlx);
-    return (0);
+	game.mlx_ptr = mlx_init();
+	if (!game.mlx_ptr)
+		return (1);
+	game.win_ptr = mlx_new_window(game.mlx_ptr, 800, 600, "So Long");
+	if (!game.win_ptr)
+		return (free(game.mlx_ptr), 1);
+	game.map = read_map("maps/map1.ber");
+	if (!game.map.data || validate_map(&game.map) != 0)
+	{
+		write(2, "Error: invalid map\n", 19);
+		return (1);
+	}
+	game.window_width = 800;
+	game.window_height = 600;
+	if (game.win_ptr == NULL)
+		init_game(&game);
+	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
+	mlx_hook(game.win_ptr, 17, 1L << 17, on_destroy, &game);
+	mlx_loop(game.mlx_ptr);
+	return (0);
 }
-
+// set window size
+// check file path .ber
+// check path???
+// render flame

@@ -1,5 +1,5 @@
 /* XPM */
-static char * items_xpm[] = {
+static char * colletible_xpm[] = {
 "32 32 1 1",
 "c c #FFD700",
 "cccccccccccccccccccccccccccccccc",
