@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/15 19:39:57 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/15 20:23:53 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,3 @@ int	main(void)
 	mlx_loop(game.mlx_ptr);
 	return (0);
 }
-// set window size
-// check file path .ber
-// check path???
-// render flame
