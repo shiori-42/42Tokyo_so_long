@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/16 19:50:30 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:10:04 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
-
-# define TILE_WIDTH 16
-# define TILE_HEIGHT 16
 
 typedef struct s_map
 {
@@ -39,7 +36,6 @@ typedef struct s_game
 	void	*img_player;
 	void	*img_collectible;
 	void	*img_exit;
-	int		tile_size;
 	int		window_width;
 	int		window_height;
 	int		player_x;
@@ -54,6 +50,7 @@ typedef struct s_game
 # define PLAYER_XPM "assets/player.xpm"
 # define COLLECTIBLE_XPM "assets/collectible.xpm"
 # define EXIT_XPM "assets/exit.xpm"
+# define TILE_SIZE 32
 
 void		free_double_pointer(char **ptr, int height);
 void		free_resources(t_game *game);
@@ -64,7 +61,6 @@ int			cnt_map_size(char *filename, t_map *map);
 int			validate_map(t_map *map);
 int			allocate_map_and_load(char *filename, t_map *map);
 void		init_game(t_game *game);
-void		calculate_tile_size(t_game *game);
 int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
 int			on_destroy(t_game *game);

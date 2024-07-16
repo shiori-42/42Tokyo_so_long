@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 20:01:47 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:09:35 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,6 @@ int	main(int argc, char **argv)
 	if (!game.mlx_ptr)
 	{
 		write(2, "Error: MLX initialization failed\n", 32);
-		return (EXIT_FAILURE);
-	}
-	game.win_ptr = mlx_new_window(game.mlx_ptr, 800, 600, "So Long");
-	if (!game.win_ptr)
-	{
-		write(2, "Error: Window creation failed\n", 31);
-		free(game.mlx_ptr);
 		return (EXIT_FAILURE);
 	}
 	if (cnt_map_size(argv[1], &game.map) || allocate_map_and_load(argv[1],

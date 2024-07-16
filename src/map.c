@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 19:57:59 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/16 21:32:58 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	check_file_name(char *file_name)
 		exit(EXIT_FAILURE);
 	}
 }
+
 
 int	cnt_map_size(char *filename, t_map *map)
 {
@@ -46,6 +47,7 @@ int	cnt_map_size(char *filename, t_map *map)
 		free(line);
 	}
 	close(fd);
+	printf("Map Size: %d x %d\n", map->x, map->y); // デバッグ
 	return (0);
 }
 
@@ -88,6 +90,8 @@ int	validate_map(t_map *map)
 		}
 		y++;
 	}
+	printf("Player Count: %d, Exit Count: %d, Collected Count: %d\n",
+		player_cnt, exit_cnt, collected); // デバッグ
 	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
 		return (1);
 	return (0);
@@ -107,7 +111,14 @@ int	allocate_map_and_load(char *filename, t_map *map)
 		return (1);
 	i = 0;
 	while ((line = get_next_line(fd)) != NULL)
+	{
 		map->data[i++] = line;
+	}
 	close(fd);
+	// デバッグ
+	for (i = 0; i < map->y; i++)
+	{
+		printf("Map Line %d: %s", i, map->data[i]);
+	}
 	return (0);
 }

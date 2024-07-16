@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 19:26:29 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/16 22:12:24 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ void	init_game(t_game *game)
 	int	x;
 	int	y;
 
+	game->window_width = game->map.x * TILE_SIZE;
+	game->window_height = game->map.y * TILE_SIZE;
 	game->collected = 0;
-	calculate_tile_size(game);
 	y = 0;
 	while (y < game->map.y)
 	{
@@ -85,27 +86,24 @@ void	init_game(t_game *game)
 		}
 		y++;
 	}
+	printf("Player Start Position: (%d, %d)\n", game->player_x, game->player_y);
 	if (!game->mlx_ptr)
 	{
 		write(2, "Error: MLX initialization failed\n", 32);
+		exit(EXIT_FAILURE);
+	}
+	game->win_ptr = mlx_new_window(game->mlx_ptr, game->window_width,
+			game->window_height, "So Long");
+	if (!game->win_ptr)
+	{
+		write(2, "Error: Window creation failed\n", 31);
+		free(game->mlx_ptr);
 		exit(EXIT_FAILURE);
 	}
 	load_img(game);
 	render_map(game);
 }
 
-void	calculate_tile_size(t_game *game)
-{
-	int	tile_width;
-	int	tile_height;
-
-	tile_width = game->window_width / game->map.x;
-	tile_height = game->window_height / game->map.y;
-	if (tile_width < tile_height)
-		game->tile_size = tile_width;
-	else
-		game->tile_size = tile_height;
-}
 
 int	handle_keypress(int keycode, t_game *game)
 {
@@ -170,7 +168,7 @@ void	render_map(t_game *game)
 			else if (game->map.data[y][x] == 'P')
 				img = game->img_player;
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x
-				* game->tile_size, y * game->tile_size);
+				* TILE_SIZE, y * TILE_SIZE);
 			x++;
 		}
 		y++;
