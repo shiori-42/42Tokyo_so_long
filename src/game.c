@@ -3,31 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 17:12:14 by shiori           ###   ########.fr       */
+/*   Updated: 2024/07/16 19:26:29 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void load_img(t_game *game)
+void	load_img(t_game *game)
 {
-	int width;
-	int height;
+	int	width;
+	int	height;
 
 	game->img_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM, &width,
-										   &height);
+			&height);
 	game->img_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM, &width,
-											&height);
+			&height);
 	game->img_player = mlx_xpm_file_to_image(game->mlx_ptr, PLAYER_XPM, &width,
-											 &height);
+			&height);
 	game->img_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
-												  COLLECTIBLE_XPM, &width, &height);
+			COLLECTIBLE_XPM, &width, &height);
 	game->img_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM, &width,
-										   &height);
-	if (!game->img_wall || !game->img_empty || !game->img_player || !game->img_collectible || !game->img_exit)
+			&height);
+	if (!game->img_wall || !game->img_empty || !game->img_player
+		|| !game->img_collectible || !game->img_exit)
 	{
 		write(2, "Error: Failed to load textures\n", 31);
 		free_resources(game);
@@ -35,7 +36,7 @@ void load_img(t_game *game)
 	}
 }
 
-void free_resources(t_game *game)
+void	free_resources(t_game *game)
 {
 	if (game->img_wall)
 		mlx_destroy_image(game->mlx_ptr, game->img_wall);
@@ -49,19 +50,19 @@ void free_resources(t_game *game)
 		mlx_destroy_image(game->mlx_ptr, game->img_exit);
 	if (game->win_ptr)
 		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-	if(game->map.data)
-		free_double_pointer(game->map.data,game->map.y);
+	if (game->map.data)
+		free_double_pointer(game->map.data, game->map.y);
 	if (game->mlx_ptr)
 	{
-		// mlx_destroy_display(game->mlx_ptr);
+		mlx_destroy_display(game->mlx_ptr);
 		free(game->mlx_ptr);
 	}
 }
 
-void init_game(t_game *game)
+void	init_game(t_game *game)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	game->collected = 0;
 	calculate_tile_size(game);
@@ -92,10 +93,11 @@ void init_game(t_game *game)
 	load_img(game);
 	render_map(game);
 }
-void calculate_tile_size(t_game *game)
+
+void	calculate_tile_size(t_game *game)
 {
-	int tile_width;
-	int tile_height;
+	int	tile_width;
+	int	tile_height;
 
 	tile_width = game->window_width / game->map.x;
 	tile_height = game->window_height / game->map.y;
@@ -105,22 +107,22 @@ void calculate_tile_size(t_game *game)
 		game->tile_size = tile_height;
 }
 
-int handle_keypress(int keycode, t_game *game)
+int	handle_keypress(int keycode, t_game *game)
 {
-	int new_x;
-	int new_y;
+	int	new_x;
+	int	new_y;
 
 	new_x = game->player_x;
 	new_y = game->player_y;
 	if (keycode == 53)
 		exit(0);
-	if (keycode == 13) // W
+	if (keycode == 13)
 		new_y -= 1;
-	if (keycode == 0) // A
+	if (keycode == 0)
 		new_x -= 1;
-	if (keycode == 1) // S
+	if (keycode == 1)
 		new_y += 1;
-	if (keycode == 2) // D
+	if (keycode == 2)
 		new_x += 1;
 	if (game->map.data[new_y][new_x] != '1')
 	{
@@ -136,7 +138,7 @@ int handle_keypress(int keycode, t_game *game)
 	else if (game->map.data[new_y][new_x] == 'E' && game->collected == 0)
 	{
 		printf("Congratulations! You've completed the game in %d moves.\n",
-			   game->move_cnt);
+			game->move_cnt);
 		exit(0);
 	}
 	game->map.data[new_y][new_x] = 'P';
@@ -144,11 +146,11 @@ int handle_keypress(int keycode, t_game *game)
 	return (0);
 }
 
-void render_map(t_game *game)
+void	render_map(t_game *game)
 {
-	int x;
-	int y;
-	void *img;
+	int		x;
+	int		y;
+	void	*img;
 
 	mlx_clear_window(game->mlx_ptr, game->win_ptr);
 	y = 0;
@@ -167,13 +169,15 @@ void render_map(t_game *game)
 				img = game->img_exit;
 			else if (game->map.data[y][x] == 'P')
 				img = game->img_player;
-			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x * game->tile_size, y * game->tile_size);
+			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x
+				* game->tile_size, y * game->tile_size);
 			x++;
 		}
 		y++;
 	}
 }
-int on_destroy(t_game *game)
+
+int	on_destroy(t_game *game)
 {
 	free_resources(game);
 	exit(0);
