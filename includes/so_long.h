@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/16 22:10:04 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:10:03 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,15 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+typedef struct s_img
+{
+	void	*player_up;
+	void	*player_left;
+	void	*player_right;
+	void	*player_down;
+	void	*background;
+}			t_img;
 
 typedef struct s_map
 {
@@ -65,5 +74,6 @@ int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
 int			on_destroy(t_game *game);
 void		check_current_path(t_game *game);
+void	load_img(t_game *game);
 
 #endif

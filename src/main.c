@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 22:09:35 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/18 23:23:09 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,25 @@ int	main(int argc, char **argv)
 {
 	t_game	game;
 
-	ft_memset(&game, 0, sizeof(t_game));
 	if (argc < 2)
 	{
 		write(2, "Usage: ./so_long <filename>\n", 28);
 		return (EXIT_FAILURE);
 	}
-	check_file_name(argv[1]);
-	game.mlx_ptr = mlx_init();
-	if (!game.mlx_ptr)
+	if (cnt_map_size(argv[1], &game.map))
 	{
-		write(2, "Error: MLX initialization failed\n", 32);
+		write(2, "Error: Map processing failed\n", 30);
+		free_resources(&game);
 		return (EXIT_FAILURE);
 	}
-	if (cnt_map_size(argv[1], &game.map) || allocate_map_and_load(argv[1],
+	check_file_name(argv[1]);
+	game.map.data = ft_calloc(game.map.x + 1, sizeof(char *));
+	if (!game.map.data)
+		exit (1);
+	load_img(&game);
+	init_game(&game);
+
+	if (allocate_map_and_load(argv[1],
 			&game.map))
 	{
 		write(2, "Error: Map processing failed\n", 30);
@@ -60,7 +65,14 @@ int	main(int argc, char **argv)
 		free_resources(&game);
 		return (EXIT_FAILURE);
 	}
-	init_game(&game);
+	game.mlx_ptr = mlx_init();
+	if (!game.mlx_ptr)
+	{
+		write(2, "Error: MLX initialization failed\n", 32);
+		return (EXIT_FAILURE);
+	}
+	game.win_ptr = mlx_new_window(game.mlx_ptr, game.window_width,
+		game.window_height, "So Long");
 	check_current_path(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win_ptr, 17, 1L << 17, on_destroy, &game);

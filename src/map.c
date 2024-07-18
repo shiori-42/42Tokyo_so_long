@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 21:32:58 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/18 23:26:06 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	check_file_name(char *file_name)
 		exit(EXIT_FAILURE);
 	}
 }
-
 
 int	cnt_map_size(char *filename, t_map *map)
 {
@@ -50,6 +49,7 @@ int	cnt_map_size(char *filename, t_map *map)
 	printf("Map Size: %d x %d\n", map->x, map->y); // デバッグ
 	return (0);
 }
+
 
 int	validate_map(t_map *map)
 {
@@ -103,9 +103,6 @@ int	allocate_map_and_load(char *filename, t_map *map)
 	char	*line;
 	int		i;
 
-	map->data = malloc(map->y * sizeof(char *));
-	if (!map->data)
-		return (1);
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 19:59:57 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/18 23:15:12 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	is_valid_move(t_game *game, int x, int y, char **visited)
 {
 	return (y >= 0 && y < game->map.y && x >= 0 && x < game->map.x
 		&& game->map.data[y][x] != '1' && visited[y][x] == '0');
+		
 }
 
 int	check_valid_path(t_game *game, int x, int y, char **visited)
@@ -68,13 +69,14 @@ void	check_current_path(t_game *game)
 
 	start_x = game->player_x;
 	start_y = game->player_y;
-	visited = malloc(game->map.y * sizeof(char *));
+	visited = malloc((game->map.y+1) * sizeof(char *));
 	y = 0;
 	while (y < game->map.y)
 	{
-		visited[y] = malloc(game->map.x * sizeof(char));
+		visited[y] = malloc((game->map.x+1) * sizeof(char));
 		y++;
 	}
+	visited[game->map.y]=0;
 	init_visited(visited, game->map.y, game->map.x);
 	if (!check_valid_path(game, start_x, start_y, visited))
 	{

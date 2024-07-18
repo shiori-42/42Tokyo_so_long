@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/16 22:12:24 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/18 23:06:22 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,12 @@ void	init_game(t_game *game)
 		write(2, "Error: MLX initialization failed\n", 32);
 		exit(EXIT_FAILURE);
 	}
-	game->win_ptr = mlx_new_window(game->mlx_ptr, game->window_width,
-			game->window_height, "So Long");
 	if (!game->win_ptr)
 	{
 		write(2, "Error: Window creation failed\n", 31);
 		free(game->mlx_ptr);
 		exit(EXIT_FAILURE);
 	}
-	load_img(game);
-	render_map(game);
 }
 
 
