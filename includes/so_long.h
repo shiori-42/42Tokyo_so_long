@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/18 20:10:03 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:26:59 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,9 @@ typedef struct s_game
 	int		player_x;
 	int		player_y;
 	int		collected;
+	int		collectibles;
 	int		move_cnt;
-	t_map	map;
+	t_map	*map;
 }			t_game;
 
 # define WALL_XPM "assets/wall.xpm"
@@ -60,20 +61,31 @@ typedef struct s_game
 # define COLLECTIBLE_XPM "assets/collectible.xpm"
 # define EXIT_XPM "assets/exit.xpm"
 # define TILE_SIZE 32
+# define KEY_ESC 65307
+# define KEY_W 119
+# define KEY_A 97
+# define KEY_S 115
+# define KEY_D 100
+# define KEY_UP 65362
+# define KEY_LEFT 65361
+# define KEY_DOWN 65364
+# define KEY_RIGHT 65363
 
 void		free_double_pointer(char **ptr, int height);
 void		free_resources(t_game *game);
 void		handle_error(t_game *game, char *str, int num);
 int			ft_exit(t_game *game);
-void		check_file_name(char *file_name);
-int			cnt_map_size(char *filename, t_map *map);
+int			check_file_name(char *file_name);
+int			cnt_map_size(char *filename, t_game *game, t_map *map);
 int			validate_map(t_map *map);
-int			allocate_map_and_load(char *filename, t_map *map);
-void		init_game(t_game *game);
+int			create_map(char *filename, t_map *map);
+void		init_game(t_game *game, t_map *map);
 int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
 int			on_destroy(t_game *game);
-void		check_current_path(t_game *game);
-void	load_img(t_game *game);
+int			check_current_path(t_game *game);
+void		load_img(t_game *game);
+void		ft_move(t_game *game, char pos, int dir);
+void		winner(t_game *game);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/18 23:06:22 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:34:06 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,108 +36,89 @@ void	load_img(t_game *game)
 	}
 }
 
-void	free_resources(t_game *game)
-{
-	if (game->img_wall)
-		mlx_destroy_image(game->mlx_ptr, game->img_wall);
-	if (game->img_empty)
-		mlx_destroy_image(game->mlx_ptr, game->img_empty);
-	if (game->img_player)
-		mlx_destroy_image(game->mlx_ptr, game->img_player);
-	if (game->img_collectible)
-		mlx_destroy_image(game->mlx_ptr, game->img_collectible);
-	if (game->img_exit)
-		mlx_destroy_image(game->mlx_ptr, game->img_exit);
-	if (game->win_ptr)
-		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-	if (game->map.data)
-		free_double_pointer(game->map.data, game->map.y);
-	if (game->mlx_ptr)
-	{
-		mlx_destroy_display(game->mlx_ptr);
-		free(game->mlx_ptr);
-	}
-}
-
-void	init_game(t_game *game)
+void	init_game(t_game *game, t_map *map)
 {
 	int	x;
 	int	y;
 
-	game->window_width = game->map.x * TILE_SIZE;
-	game->window_height = game->map.y * TILE_SIZE;
+	load_img(game);
+	game->map = map;
 	game->collected = 0;
+	game->collectibles = 0;
+	game->move_cnt = 0;
 	y = 0;
-	while (y < game->map.y)
+	while (y < game->map->y)
 	{
 		x = 0;
-		while (x < game->map.x)
+		while (x < game->map->x)
 		{
-			if (game->map.data[y][x] == 'P')
+			if (game->map->data[y][x] == 'P')
 			{
 				game->player_x = x;
 				game->player_y = y;
 			}
-			else if (game->map.data[y][x] == 'C')
+			else if (game->map->data[y][x] == 'C')
 			{
-				game->collected++;
+				game->collectibles++;
 			}
 			x++;
 		}
 		y++;
 	}
-	printf("Player Start Position: (%d, %d)\n", game->player_x, game->player_y);
-	if (!game->mlx_ptr)
-	{
-		write(2, "Error: MLX initialization failed\n", 32);
-		exit(EXIT_FAILURE);
-	}
-	if (!game->win_ptr)
-	{
-		write(2, "Error: Window creation failed\n", 31);
-		free(game->mlx_ptr);
-		exit(EXIT_FAILURE);
-	}
+	write(1, "Player Start Position: (", 25);
+	ft_putnbr_fd(game->player_x, 1);
+	write(1, ", ", 2);
+	ft_putnbr_fd(game->player_y, 1);
+	write(1, ")\n", 2);
 }
 
-
 int	handle_keypress(int keycode, t_game *game)
+{
+	printf("Key pressed: %d\n", keycode);
+	if (keycode == KEY_ESC)
+		ft_exit(game);
+	else if (keycode == KEY_W || keycode == KEY_UP)
+		ft_move(game, 'y', -1);
+	else if (keycode == KEY_A || keycode == KEY_LEFT)
+		ft_move(game, 'x', -1);
+	else if (keycode == KEY_S || keycode == KEY_DOWN)
+		ft_move(game, 'y', 1);
+	else if (keycode == KEY_D || keycode == KEY_RIGHT)
+		ft_move(game, 'x', 1);
+	if (game->map->data[game->player_y][game->player_x] == 'E'
+		&& game->collected == game->collectibles)
+		winner(game);
+	return (0);
+}
+
+void	ft_move(t_game *game, char pos, int dir)
 {
 	int	new_x;
 	int	new_y;
 
 	new_x = game->player_x;
 	new_y = game->player_y;
-	if (keycode == 53)
-		exit(0);
-	if (keycode == 13)
-		new_y -= 1;
-	if (keycode == 0)
-		new_x -= 1;
-	if (keycode == 1)
-		new_y += 1;
-	if (keycode == 2)
-		new_x += 1;
-	if (game->map.data[new_y][new_x] != '1')
+	if (pos == 'y')
+		new_y += dir;
+	else
+		new_x += dir;
+	if (game->map->data[new_y][new_x] != '1')
 	{
-		game->map.data[game->player_y][game->player_x] = '0';
+		if (game->map->data[new_y][new_x] == 'C')
+		{
+			game->collected++;
+			game->map->data[new_y][new_x] = '0';
+		}
+		game->map->data[game->player_y][game->player_x] = '0';
 		game->player_x = new_x;
 		game->player_y = new_y;
+		game->map->data[new_y][new_x] = 'P';
 		game->move_cnt++;
-		printf("Moves: %d\n", game->move_cnt);
+		write(1, "Moves: ", 7);
+		ft_putnbr_fd(game->move_cnt, 1);
+		write(1, "\n", 1);
 		render_map(game);
 	}
-	if (game->map.data[new_y][new_x] == 'C')
-		game->collected--;
-	else if (game->map.data[new_y][new_x] == 'E' && game->collected == 0)
-	{
-		printf("Congratulations! You've completed the game in %d moves.\n",
-			game->move_cnt);
-		exit(0);
-	}
-	game->map.data[new_y][new_x] = 'P';
-	render_map(game);
-	return (0);
 }
 
 void	render_map(t_game *game)
@@ -148,20 +129,20 @@ void	render_map(t_game *game)
 
 	mlx_clear_window(game->mlx_ptr, game->win_ptr);
 	y = 0;
-	while (y < game->map.y)
+	while (y < game->map->y)
 	{
 		x = 0;
-		while (x < game->map.x)
+		while (x < game->map->x)
 		{
-			if (game->map.data[y][x] == '1')
+			if (game->map->data[y][x] == '1')
 				img = game->img_wall;
-			else if (game->map.data[y][x] == '0')
+			else if (game->map->data[y][x] == '0')
 				img = game->img_empty;
-			else if (game->map.data[y][x] == 'C')
+			else if (game->map->data[y][x] == 'C')
 				img = game->img_collectible;
-			else if (game->map.data[y][x] == 'E')
+			else if (game->map->data[y][x] == 'E')
 				img = game->img_exit;
-			else if (game->map.data[y][x] == 'P')
+			else if (game->map->data[y][x] == 'P')
 				img = game->img_player;
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x
 				* TILE_SIZE, y * TILE_SIZE);
@@ -171,9 +152,4 @@ void	render_map(t_game *game)
 	}
 }
 
-int	on_destroy(t_game *game)
-{
-	free_resources(game);
-	exit(0);
-	return (0);
-}
+
