@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/19 23:26:59 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/20 21:43:37 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void		render_map(t_game *game);
 int			on_destroy(t_game *game);
 int			check_current_path(t_game *game);
 void		load_img(t_game *game);
-void		ft_move(t_game *game, char pos, int dir);
+void		ft_move(t_game *game, int new_x, int new_y);
 void		winner(t_game *game);
 
 #endif

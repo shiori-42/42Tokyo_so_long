@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/19 23:34:06 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/20 22:08:09 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,42 +72,25 @@ void	init_game(t_game *game, t_map *map)
 	write(1, ")\n", 2);
 }
 
-int	handle_keypress(int keycode, t_game *game)
+void	ft_move(t_game *game, int new_x, int new_y)
 {
-	printf("Key pressed: %d\n", keycode);
-	if (keycode == KEY_ESC)
-		ft_exit(game);
-	else if (keycode == KEY_W || keycode == KEY_UP)
-		ft_move(game, 'y', -1);
-	else if (keycode == KEY_A || keycode == KEY_LEFT)
-		ft_move(game, 'x', -1);
-	else if (keycode == KEY_S || keycode == KEY_DOWN)
-		ft_move(game, 'y', 1);
-	else if (keycode == KEY_D || keycode == KEY_RIGHT)
-		ft_move(game, 'x', 1);
-	if (game->map->data[game->player_y][game->player_x] == 'E'
-		&& game->collected == game->collectibles)
-		winner(game);
-	return (0);
-}
-
-void	ft_move(t_game *game, char pos, int dir)
-{
-	int	new_x;
-	int	new_y;
-
-	new_x = game->player_x;
-	new_y = game->player_y;
-	if (pos == 'y')
-		new_y += dir;
-	else
-		new_x += dir;
 	if (game->map->data[new_y][new_x] != '1')
 	{
 		if (game->map->data[new_y][new_x] == 'C')
 		{
 			game->collected++;
 			game->map->data[new_y][new_x] = '0';
+		}
+		if (game->map->data[new_y][new_x] == 'E')
+		{
+			if (game->collected == game->collectibles)
+			{
+				winner(game);
+			}
+			else
+			{
+				ft_exit(game);
+			}
 		}
 		game->map->data[game->player_y][game->player_x] = '0';
 		game->player_x = new_x;
@@ -119,6 +102,28 @@ void	ft_move(t_game *game, char pos, int dir)
 		write(1, "\n", 1);
 		render_map(game);
 	}
+}
+
+int	handle_keypress(int keycode, t_game *game)
+{
+	int	new_x;
+	int	new_y;
+
+	new_x = game->player_x;
+	new_y = game->player_y;
+	if (keycode == KEY_ESC)
+		ft_exit(game);
+	else if (keycode == KEY_W || keycode == KEY_UP)
+		new_y--;
+	else if (keycode == KEY_A || keycode == KEY_LEFT)
+		new_x--;
+	else if (keycode == KEY_S || keycode == KEY_DOWN)
+		new_y++;
+	else if (keycode == KEY_D || keycode == KEY_RIGHT)
+		new_x++;
+	if (new_x != game->player_x || new_y != game->player_y)
+		ft_move(game, new_x, new_y);
+	return (0);
 }
 
 void	render_map(t_game *game)
@@ -151,5 +156,3 @@ void	render_map(t_game *game)
 		y++;
 	}
 }
-
-

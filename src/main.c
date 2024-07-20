@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/19 23:33:34 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/20 22:26:44 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,30 @@ void	handle_error(t_game *game, char *str, int num)
 	exit(EXIT_FAILURE);
 }
 
-int	ft_exit(t_game *game)
+int ft_exit(t_game *game)
 {
-	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-	write(1, "-----------------------------------------------\n", 48);
-	write(1, "|              Game Over :(                   |\n", 48);
-	write(1, "|        You gave up on the mission.          |\n", 48);
-	write(1, "|   Is the game too challenging for you?      |\n", 48);
-	write(1, "|        Don't worry, you can try again!      |\n", 48);
-	write(1, "|                                             |\n", 48);
-	write(1, "|   Total moves made: ", 22);
-	ft_putnbr_fd(game->move_cnt, 1);
-	write(1, "                    |\n", 21);
-	write(1, "|   Collectibles gathered: ", 27);
-	ft_putnbr_fd(game->collected, 1);
-	write(1, "/", 1);
-	ft_putnbr_fd(game->collectibles, 1);
-	write(1, "            |\n", 13);
-	write(1, "-----------------------------------------------\n", 48);
-	free_resources(game);
-	exit(EXIT_SUCCESS);
+    write(1, "-----------------------------------------------\n", 48);
+    write(1, "|              Game Over :(                   |\n", 48);
+    write(1, "|        You gave up on the mission.          |\n", 48);
+    write(1, "|   Is the game too challenging for you?      |\n", 48);
+    write(1, "|        Don't worry, you can try again!      |\n", 48);
+    write(1, "|                                             |\n", 48);
+    write(1, "|   Total moves made: ", 22);
+    ft_putnbr_fd(game->move_cnt, 1);
+    write(1, "                       |\n", 24);
+    write(1, "|   Collectibles gathered: ", 27);
+    ft_putnbr_fd(game->collected, 1);
+    write(1, "/", 1);
+    ft_putnbr_fd(game->collectibles, 1);
+    write(1, "                |\n", 17);
+    write(1, "-----------------------------------------------\n", 48);
+
+    free_resources(game);
+    exit(EXIT_SUCCESS);
 }
 
 void	winner(t_game *game)
 {
-	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	write(1, "-----------------------------------------------\n", 48);
 	write(1, "|    🎉🎉🎉  Congratulations!!!!!  🎉🎉🎉     |\n", 48);
 	write(1, "|    You found all collectibles and exit.     |\n", 48);
@@ -110,5 +109,6 @@ int	main(int argc, char **argv)
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win_ptr, 17, 1L << 17, on_destroy, &game);
 	mlx_loop(game.mlx_ptr);
+	free_resources(&game);
 	return (EXIT_SUCCESS);
 }
