@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 MLX_DIR = mlx
 LIBFT_DIR = libft
-INCLUDES = -Iincludes -I$(MLX_DIR) -I$(LIBFT_DIR)
+INCLUDES = -Iincludes -I$(MLX_DIR) -I$(LIBFT_DIR)/includes
 
 LIBFT = $(LIBFT_DIR)/libft.a
 MLX_LIB = $(MLX_DIR)/libmlx.a

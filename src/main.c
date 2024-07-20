@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/20 22:26:44 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:35:31 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,38 +23,32 @@ void	handle_error(t_game *game, char *str, int num)
 	exit(EXIT_FAILURE);
 }
 
-int ft_exit(t_game *game)
+int	ft_exit(t_game *game)
 {
-    write(1, "-----------------------------------------------\n", 48);
-    write(1, "|              Game Over :(                   |\n", 48);
-    write(1, "|        You gave up on the mission.          |\n", 48);
-    write(1, "|   Is the game too challenging for you?      |\n", 48);
-    write(1, "|        Don't worry, you can try again!      |\n", 48);
-    write(1, "|                                             |\n", 48);
-    write(1, "|   Total moves made: ", 22);
-    ft_putnbr_fd(game->move_cnt, 1);
-    write(1, "                       |\n", 24);
-    write(1, "|   Collectibles gathered: ", 27);
-    ft_putnbr_fd(game->collected, 1);
-    write(1, "/", 1);
-    ft_putnbr_fd(game->collectibles, 1);
-    write(1, "                |\n", 17);
-    write(1, "-----------------------------------------------\n", 48);
-
-    free_resources(game);
-    exit(EXIT_SUCCESS);
+	ft_printf("-----------------------------------------------\n");
+	ft_printf("|              Game Over :(                   |\n");
+	ft_printf("|        You gave up on the mission.          |\n");
+	ft_printf("|   Is the game too challenging for you?      |\n");
+	ft_printf("|        Don't worry, you can try again!      |\n");
+	ft_printf("|                                             |\n");
+	ft_printf("|   Total moves made: %d                       |\n",
+		game->move_cnt);
+	ft_printf("|   Collectibles gathered: %d/%d                |\n",
+		game->collected, game->collectibles);
+	ft_printf("-----------------------------------------------\n");
+	free_resources(game);
+	exit(EXIT_SUCCESS);
 }
 
 void	winner(t_game *game)
 {
-	write(1, "-----------------------------------------------\n", 48);
-	write(1, "|    🎉🎉🎉  Congratulations!!!!!  🎉🎉🎉     |\n", 48);
-	write(1, "|    You found all collectibles and exit.     |\n", 48);
-	write(1, "|        ✓✓✓✓✓✓✓✓ You won! ✓✓✓✓✓✓✓✓           |\n", 48);
-	write(1, "|     Is ", 9);
-	ft_putnbr_fd(game->move_cnt, 1);
-	write(1, " moves the best you can do?         |\n", 38);
-	write(1, "-----------------------------------------------\n", 48);
+	ft_printf("-----------------------------------------------\n");
+	ft_printf("|    🎉🎉🎉  Congratulations!!!!!  🎉🎉🎉     |\n");
+	ft_printf("|    You found all collectibles and exit.     |\n");
+	ft_printf("|        ✓✓✓✓✓✓✓✓ You won! ✓✓✓✓✓✓✓✓           |\n");
+	ft_printf("|     Is %d moves the best you can do?         |\n",
+		game->move_cnt);
+	ft_printf("-----------------------------------------------\n");
 	free_resources(game);
 	exit(EXIT_SUCCESS);
 }

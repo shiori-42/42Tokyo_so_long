@@ -6,15 +6,16 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/20 21:43:37 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:24:16 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include "../libft/get_next_line.h"
-# include "../libft/libft.h"
+#include "../libft/includes/libft.h"
+#include "../libft/includes/ft_printf.h"
+#include "../libft/includes/get_next_line.h"
 # include "../mlx/mlx.h"
 # include <fcntl.h>
 # include <stdlib.h>
