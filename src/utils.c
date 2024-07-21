@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 18:45:18 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:15:37 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,7 @@ void	free_double_pointer(char **ptr, int height)
 	free(ptr);
 }
 
-// void	free_resources(t_game *game)
-// {
-// 	if (game->img_wall)
-// 		mlx_destroy_image(game->mlx_ptr, game->img_wall);
-// 	if (game->img_empty)
-// 		mlx_destroy_image(game->mlx_ptr, game->img_empty);
-// 	if (game->img_player)
-// 		mlx_destroy_image(game->mlx_ptr, game->img_player);
-// 	if (game->img_collectible)
-// 		mlx_destroy_image(game->mlx_ptr, game->img_collectible);
-// 	if (game->img_exit)
-// 		mlx_destroy_image(game->mlx_ptr, game->img_exit);
-// 	if (game->win_ptr)
-// 		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-// 	if (game->map->data)
-// 		free_double_pointer(game->map->data, game->map->y);
-// 	if (game->mlx_ptr)
-// 	{
-// 		mlx_destroy_display(game->mlx_ptr);
-// 		free(game->mlx_ptr);
-// 	}
-// }
-
-void	free_resources(t_game *game)
+void	free_images(t_game *game)
 {
 	if (game->img_wall)
 		mlx_destroy_image(game->mlx_ptr, game->img_wall);
@@ -60,6 +37,10 @@ void	free_resources(t_game *game)
 		mlx_destroy_image(game->mlx_ptr, game->img_collectible);
 	if (game->img_exit)
 		mlx_destroy_image(game->mlx_ptr, game->img_exit);
+}
+
+void	free_window_and_map(t_game *game)
+{
 	if (game->win_ptr)
 	{
 		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
@@ -83,17 +64,10 @@ void	free_resources(t_game *game)
 	}
 }
 
-// int	on_destroy(t_game *game)
-// {
-// 	free_resources(game);
-// 	exit(0);
-// 	return (0);
-// }
-
-int	on_destroy(t_game *game)
+void	free_resources(t_game *game)
 {
-	mlx_loop_end(game->mlx_ptr);
-	return (0);
+	free_images(game);
+	free_window_and_map(game);
 }
 
 void	free_map_data(char **data, int height)

@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 18:41:16 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:07:51 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,9 @@ void	ft_move(t_game *game, int new_x, int new_y)
 	if (game->map->data[new_y][new_x] == 'E')
 	{
 		if (game->collected == game->collectibles)
-		{
 			winner(game);
-		}
 		else
-		{
 			ft_exit(game);
-		}
 		return ;
 	}
 	game->map->data[game->player_y][game->player_x] = '0';

@@ -11,7 +11,7 @@ MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX = $(MLX_LIB) -L$(MLX_DIR) -L/usr/lib/X11 -lXext -lX11 
 
 SRCS_DIR = src
-SRC_FILES = check_path.c main.c utils.c game.c map.c
+SRC_FILES = check_path.c main.c utils.c game.c map.c path_utils.c map_validation.c 
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS = $(SRCS:.c=.o)
 

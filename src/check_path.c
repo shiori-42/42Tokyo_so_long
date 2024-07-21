@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 18:45:54 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 21:50:59 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,54 +84,20 @@ int	check_collectibles_path(t_game *game, int x, int y, char **visited)
 
 int	check_current_path(t_game *game)
 {
+	char	**visited;
+	int		result;
 	int		start_x;
 	int		start_y;
-	char	**visited;
-	int		y;
-	int		x;
 
-	start_x = game->player_x;
-	start_y = game->player_y;
 	visited = malloc((game->map->y + 1) * sizeof(char *));
 	if (!visited)
 		return (0);
-	y = 0;
-	while (y < game->map->y)
+	if (!check_current_path_part1(game, visited, &start_x, &start_y))
 	{
-		visited[y] = malloc((game->map->x + 1) * sizeof(char));
-		if (!visited[y])
-		{
-			free_double_pointer(visited, y);
-			return (0);
-		}
-		y++;
-	}
-	visited[game->map->y] = 0;
-	init_visited(visited, game->map->y, game->map->x);
-	if (!check_valid_path(game, start_x, start_y, visited))
-	{
-		free_double_pointer(visited, game->map->y);
+		free(visited);
 		return (0);
 	}
-	y = 0;
-	while (y < game->map->y)
-	{
-		x = 0;
-		while (x < game->map->x)
-		{
-			if (game->map->data[y][x] == 'C')
-			{
-				init_visited(visited, game->map->y, game->map->x);
-				if (!check_collectibles_path(game, start_x, start_y, visited))
-				{
-					free_double_pointer(visited, game->map->y);
-					return (0);
-				}
-			}
-			x++;
-		}
-		y++;
-	}
+	result = check_current_path_part2(game, visited, start_x, start_y);
 	free_double_pointer(visited, game->map->y);
-	return (1);
+	return (result);
 }

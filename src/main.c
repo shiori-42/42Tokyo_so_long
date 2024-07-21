@@ -6,11 +6,17 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 18:35:11 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:20:38 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+int	on_destroy(t_game *game)
+{
+	mlx_loop_end(game->mlx_ptr);
+	return (0);
+}
 
 void	handle_error(t_game *game, char *str, int num)
 {
@@ -53,6 +59,35 @@ void	winner(t_game *game)
 	exit(EXIT_SUCCESS);
 }
 
+int	setup_game(t_game *game, char *filename)
+{
+	ft_memset(game, 0, sizeof(t_game));
+	game->map = malloc(sizeof(t_map));
+	if (!game->map)
+		return (1);
+	game->mlx_ptr = mlx_init();
+	if (!game->mlx_ptr)
+	{
+		free(game->map);
+		return (1);
+	}
+	if (cnt_map_size(filename, game, game->map) || !check_file_name(filename)
+		|| !(game->map->data = ft_calloc(game->map->y + 1, sizeof(char *)))
+		|| create_map(filename, game->map))
+	{
+		free_resources(game);
+		return (1);
+	}
+	game->win_ptr = mlx_new_window(game->mlx_ptr, game->window_width,
+			game->window_height, "So Long");
+	if (!game->win_ptr)
+	{
+		free_resources(game);
+		return (1);
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	game;
@@ -62,34 +97,9 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nUsage: ./so_long <filename>\n", 2);
 		return (EXIT_FAILURE);
 	}
-	ft_memset(&game, 0, sizeof(t_game));
-	game.map = malloc(sizeof(t_map));
-	if (!game.map)
+	if (setup_game(&game, argv[1]))
 	{
-		ft_putstr_fd("Error\nMemory allocation failed\n", 2);
-		return (EXIT_FAILURE);
-	}
-	game.mlx_ptr = mlx_init();
-	if (!game.mlx_ptr)
-	{
-		ft_putstr_fd("Error\nMLX initialization failed\n", 2);
-		free(game.map);
-		return (EXIT_FAILURE);
-	}
-	if (cnt_map_size(argv[1], &game, game.map) || !check_file_name(argv[1])
-		|| !(game.map->data = ft_calloc(game.map->y + 1, sizeof(char *)))
-		|| create_map(argv[1], game.map))
-	{
-		ft_putstr_fd("Error\nMap processing failed\n", 2);
-		free_resources(&game);
-		return (EXIT_FAILURE);
-	}
-	game.win_ptr = mlx_new_window(game.mlx_ptr, game.window_width,
-			game.window_height, "So Long");
-	if (!game.win_ptr)
-	{
-		ft_putstr_fd("Error\nWindow creation failed\n", 2);
-		free_resources(&game);
+		ft_putstr_fd("Error\nFailed to setup game\n", 2);
 		return (EXIT_FAILURE);
 	}
 	init_game(&game, game.map);
