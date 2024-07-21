@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/20 23:46:28 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:41:16 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	load_img(t_game *game)
 	if (!game->img_wall || !game->img_empty || !game->img_player
 		|| !game->img_collectible || !game->img_exit)
 	{
-		write(2, "Error: Failed to load textures\n", 31);
+		ft_putstr_fd("Error\nFailed to load textures\n", 2);
 		free_resources(game);
 		exit(EXIT_FAILURE);
 	}
@@ -67,36 +67,36 @@ void	init_game(t_game *game, t_map *map)
 	}
 }
 
-void    ft_move(t_game *game, int new_x, int new_y)
+void	ft_move(t_game *game, int new_x, int new_y)
 {
-    if (game->map->data[new_y][new_x] != '1')
-    {
-        if (game->map->data[new_y][new_x] == 'C')
-        {
-            game->collected++;
-            game->map->data[new_y][new_x] = '0';
-        }
-        if (game->map->data[new_y][new_x] == 'E')
-        {
-            if (game->collected == game->collectibles)
-            {
-                winner(game);
-            }
-            else
-            {
-                ft_exit(game);
-            }
-        }
-        game->map->data[game->player_y][game->player_x] = '0';
-        game->player_x = new_x;
-        game->player_y = new_y;
-        game->map->data[new_y][new_x] = 'P';
-        game->move_cnt++;
-        write(1, "Moves: ", 7);
-        ft_putnbr_fd(game->move_cnt, 1);
-        write(1, "\n", 1);
-        render_map(game);
-    }
+	if (game->map->data[new_y][new_x] == '1')
+		return ;
+	if (game->map->data[new_y][new_x] == 'C')
+	{
+		game->collected++;
+		game->map->data[new_y][new_x] = '0';
+	}
+	if (game->map->data[new_y][new_x] == 'E')
+	{
+		if (game->collected == game->collectibles)
+		{
+			winner(game);
+		}
+		else
+		{
+			ft_exit(game);
+		}
+		return ;
+	}
+	game->map->data[game->player_y][game->player_x] = '0';
+	game->player_x = new_x;
+	game->player_y = new_y;
+	game->map->data[new_y][new_x] = 'P';
+	game->move_cnt++;
+	write(1, "Moves: ", 7);
+	ft_putnbr_fd(game->move_cnt, 1);
+	write(1, "\n", 1);
+	render_map(game);
 }
 
 int	handle_keypress(int keycode, t_game *game)

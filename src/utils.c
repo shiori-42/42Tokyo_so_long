@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/20 22:19:50 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:45:18 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,18 @@ int	on_destroy(t_game *game)
 {
 	mlx_loop_end(game->mlx_ptr);
 	return (0);
+}
+
+void	free_map_data(char **data, int height)
+{
+	int	i;
+
+	i = 0;
+	while (i < height)
+	{
+		if (data[i])
+			free(data[i]);
+		i++;
+	}
+	free(data);
 }

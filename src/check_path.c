@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/19 22:59:11 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:45:54 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,11 @@ int	check_collectibles_path(t_game *game, int x, int y, char **visited)
 
 int	check_current_path(t_game *game)
 {
-	int start_x;
-	int start_y;
-	char **visited;
-	int y;
-	int x;
+	int		start_x;
+	int		start_y;
+	char	**visited;
+	int		y;
+	int		x;
 
 	start_x = game->player_x;
 	start_y = game->player_y;
