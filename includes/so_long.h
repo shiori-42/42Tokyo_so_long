@@ -6,16 +6,16 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/21 22:18:57 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:43:18 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-#include "../libft/includes/libft.h"
-#include "../libft/includes/ft_printf.h"
-#include "../libft/includes/get_next_line.h"
+# include "../libft/includes/ft_printf.h"
+# include "../libft/includes/get_next_line.h"
+# include "../libft/includes/libft.h"
 # include "../mlx/mlx.h"
 # include <fcntl.h>
 # include <stdlib.h>
@@ -79,7 +79,7 @@ int			ft_exit(t_game *game);
 int			check_file_name(char *file_name);
 int			cnt_map_size(char *filename, t_game *game, t_map *map);
 int			validate_map(t_map *map);
-int			create_map(char *filename, t_map *map);
+int			create_map(t_game *game, char *filename, t_map *map);
 void		init_game(t_game *game, t_map *map);
 int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
@@ -88,17 +88,19 @@ int			check_current_path(t_game *game);
 void		load_img(t_game *game);
 void		ft_move(t_game *game, int new_x, int new_y);
 void		winner(t_game *game);
-void	free_map_data(char **data, int height);
-int	check_current_path_part1(t_game *game, char **visited, int *start_x,
-		int *start_y);
-int	check_current_path_part2(t_game *game, char **visited, int start_x,
-		int start_y);
-int	validate_map_borders(t_map *map);
-int	validate_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
-		int *collected);
-int	is_valid_move(t_game *game, int x, int y, char **visited);
-int	check_valid_path(t_game *game, int x, int y, char **visited);
-void	init_visited(char **visited, int height, int width);
-int	check_collectibles_path(t_game *game, int x, int y, char **visited);
+void		free_map_data(char **data, int height);
+int			check_current_path_part1(t_game *game, char **visited, int *start_x,
+				int *start_y);
+int			check_current_path_part2(t_game *game, char **visited, int start_x,
+				int start_y);
+int			validate_map_borders(t_map *map);
+int			validate_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
+				int *collected);
+int			is_valid_move(t_game *game, int x, int y, char **visited);
+int			check_valid_path(t_game *game, int x, int y, char **visited);
+void		init_visited(char **visited, int height, int width);
+int			check_collectibles_path(t_game *game, int x, int y, char **visited);
+int			process_and_finalize_map(t_game *game, t_map *map, char *line,
+				int *i);
 
 #endif

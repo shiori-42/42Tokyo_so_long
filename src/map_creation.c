@@ -6,13 +6,13 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:32:45 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/21 21:50:34 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:42:14 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	process_map_line(t_map *map, char *line, int *i)
+int	process_and_finalize_map(t_game *game, t_map *map, char *line, int *i)
 {
 	int	len;
 
@@ -20,29 +20,15 @@ int	process_map_line(t_map *map, char *line, int *i)
 	if (line[len - 1] == '\n')
 		len--;
 	if (len != map->x)
-	{
-		ft_putstr_fd("Error\nMap has to be rectangular\n", 2);
-		free(line);
-		free_map_data(map->data, *i);
-		return (1);
-	}
+		handle_error(game, "Map has to be rectangular\n", 1);
 	map->data[*i] = ft_strtrim(line, "\n");
 	if (!map->data[*i])
-	{
-		free_map_data(map->data, *i);
-		return (1);
-	}
+		handle_error(game, "Memory allocation failed\n", 1);
 	(*i)++;
-	return (0);
-}
-
-int	finalize_map(t_map *map, int i)
-{
-	if (i != map->y)
+	if (*i == map->y)
 	{
-		ft_putstr_fd("Error\nWrong number of map lines\n", 2);
-		free_map_data(map->data, i);
-		return (1);
+		if (validate_map(map))
+			handle_error(game, "Invalid map\n", 1);
 	}
-	return (validate_map(map));
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 21:50:59 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:30:04 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,19 @@ int	is_valid_move(t_game *game, int x, int y, char **visited)
 
 int	check_valid_path(t_game *game, int x, int y, char **visited)
 {
-	int	directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+	int	directions[4][2];
 	int	i;
 	int	new_x;
 	int	new_y;
 
+	directions[0][0] = 0;
+	directions[0][1] = 1;
+	directions[1][0] = 1;
+	directions[1][1] = 0;
+	directions[2][0] = 0;
+	directions[2][1] = -1;
+	directions[3][0] = -1;
+	directions[3][1] = 0;
 	if (game->map->data[y][x] == 'E')
 		return (1);
 	visited[y][x] = '1';
@@ -61,11 +69,19 @@ void	init_visited(char **visited, int height, int width)
 
 int	check_collectibles_path(t_game *game, int x, int y, char **visited)
 {
-	int	directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+	int	directions[4][2];
 	int	i;
 	int	new_x;
 	int	new_y;
 
+	directions[0][0] = 0;
+	directions[0][1] = 1;
+	directions[1][0] = 1;
+	directions[1][1] = 0;
+	directions[2][0] = 0;
+	directions[2][1] = -1;
+	directions[3][0] = -1;
+	directions[3][1] = 0;
 	if (game->map->data[y][x] == 'C')
 		return (1);
 	visited[y][x] = '1';

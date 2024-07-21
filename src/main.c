@@ -6,17 +6,11 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 22:20:38 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/07/21 22:48:09 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-int	on_destroy(t_game *game)
-{
-	mlx_loop_end(game->mlx_ptr);
-	return (0);
-}
 
 void	handle_error(t_game *game, char *str, int num)
 {
@@ -67,24 +61,16 @@ int	setup_game(t_game *game, char *filename)
 		return (1);
 	game->mlx_ptr = mlx_init();
 	if (!game->mlx_ptr)
-	{
-		free(game->map);
-		return (1);
-	}
-	if (cnt_map_size(filename, game, game->map) || !check_file_name(filename)
-		|| !(game->map->data = ft_calloc(game->map->y + 1, sizeof(char *)))
-		|| create_map(filename, game->map))
-	{
-		free_resources(game);
-		return (1);
-	}
+		return (free(game->map), 1);
+	if (cnt_map_size(filename, game, game->map) || !check_file_name(filename))
+		return (free_resources(game), 1);
+	game->map->data = ft_calloc(game->map->y + 1, sizeof(char *));
+	if (!game->map->data || create_map(game, filename, game->map))
+		return (free_resources(game), 1);
 	game->win_ptr = mlx_new_window(game->mlx_ptr, game->window_width,
 			game->window_height, "So Long");
 	if (!game->win_ptr)
-	{
-		free_resources(game);
-		return (1);
-	}
+		return (free_resources(game), 1);
 	return (0);
 }
 
@@ -93,22 +79,12 @@ int	main(int argc, char **argv)
 	t_game	game;
 
 	if (argc != 2)
-	{
-		ft_putstr_fd("Error\nUsage: ./so_long <filename>\n", 2);
-		return (EXIT_FAILURE);
-	}
+		handle_error(NULL, "Usage: ./so_long <filename>\n", 0);
 	if (setup_game(&game, argv[1]))
-	{
-		ft_putstr_fd("Error\nFailed to setup game\n", 2);
-		return (EXIT_FAILURE);
-	}
+		handle_error(&game, "Failed to setup game\n", 1);
 	init_game(&game, game.map);
 	if (!check_current_path(&game))
-	{
-		ft_putstr_fd("Error\nNo valid path in map\n", 2);
-		free_resources(&game);
-		return (EXIT_FAILURE);
-	}
+		handle_error(&game, "No valid path in map\n", 1);
 	render_map(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win_ptr, 17, 1L << 17, on_destroy, &game);

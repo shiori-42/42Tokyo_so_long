@@ -1,0 +1,445 @@
+diff --git a/Makefile b/Makefile
+index 0bb1e9b..9f1099b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,7 +11,7 @@ MLX_LIB = $(MLX_DIR)/libmlx.a
+ MLX = $(MLX_LIB) -L$(MLX_DIR) -L/usr/lib/X11 -lXext -lX11 
+ 
+ SRCS_DIR = src
+-SRC_FILES = check_path.c main.c utils.c game.c map.c
++SRC_FILES = check_path.c main.c utils.c game.c map.c path_utils.c map_validation.c 
+ SRCS = $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
+ OBJS = $(SRCS:.c=.o)
+ 
+diff --git a/includes/so_long.h b/includes/so_long.h
+index 48d1043..c59af26 100644
+--- a/includes/so_long.h
++++ b/includes/so_long.h
+@@ -6,7 +6,7 @@
+ /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+ /*                                                +#+#+#+#+#+   +#+           */
+ /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
+-/*   Updated: 2024/07/21 18:26:08 by syonekur         ###   ########.fr       */
++/*   Updated: 2024/07/21 21:35:13 by syonekur         ###   ########.fr       */
+ /*                                                                            */
+ /* ************************************************************************** */
+ 
+@@ -89,5 +89,16 @@ void		load_img(t_game *game);
+ void		ft_move(t_game *game, int new_x, int new_y);
+ void		winner(t_game *game);
+ void	free_map_data(char **data, int height);
++int	check_current_path_part1(t_game *game, char **visited, int *start_x,
++		int *start_y);
++int	check_current_path_part2(t_game *game, char **visited, int start_x,
++		int start_y);
++int	validate_map_borders(t_map *map);
++int	validate_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
++		int *collected);
++int	is_valid_move(t_game *game, int x, int y, char **visited);
++int	check_valid_path(t_game *game, int x, int y, char **visited);
++void	init_visited(char **visited, int height, int width);
++int	check_collectibles_path(t_game *game, int x, int y, char **visited);
+ 
+ #endif
+diff --git a/mlx b/mlx
+--- a/mlx
++++ b/mlx
+@@ -1 +1 @@
+-Subproject commit 7dc53a411a7d4ae286c60c6229bd1e395b0efb82
++Subproject commit 7dc53a411a7d4ae286c60c6229bd1e395b0efb82-dirty
+diff --git a/src/check_path.c b/src/check_path.c
+index f08e683..56ffc14 100644
+--- a/src/check_path.c
++++ b/src/check_path.c
+@@ -6,7 +6,7 @@
+ /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+ /*                                                +#+#+#+#+#+   +#+           */
+ /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
+-/*   Updated: 2024/07/21 18:45:54 by syonekur         ###   ########.fr       */
++/*   Updated: 2024/07/21 21:22:36 by syonekur         ###   ########.fr       */
+ /*                                                                            */
+ /* ************************************************************************** */
+ 
+@@ -82,56 +82,76 @@ int	check_collectibles_path(t_game *game, int x, int y, char **visited)
+ 	return (0);
+ }
+ 
+-int	check_current_path(t_game *game)
++// int	check_current_path(t_game *game)
++// {
++// 	int		start_x;
++// 	int		start_y;
++// 	char	**visited;
++// 	int		y;
++// 	int		x;
++
++// 	start_x = game->player_x;
++// 	start_y = game->player_y;
++// 	visited = malloc((game->map->y + 1) * sizeof(char *));
++// 	if (!visited)
++// 		return (0);
++// 	y = 0;
++// 	while (y < game->map->y)
++// 	{
++// 		visited[y] = malloc((game->map->x + 1) * sizeof(char));
++// 		if (!visited[y])
++// 		{
++// 			free_double_pointer(visited, y);
++// 			return (0);
++// 		}
++// 		y++;
++// 	}
++// 	visited[game->map->y] = 0;
++// 	init_visited(visited, game->map->y, game->map->x);
++// 	if (!check_valid_path(game, start_x, start_y, visited))
++// 	{
++// 		free_double_pointer(visited, game->map->y);
++// 		return (0);
++// 	}
++// 	y = 0;
++// 	while (y < game->map->y)
++// 	{
++// 		x = 0;
++// 		while (x < game->map->x)
++// 		{
++// 			if (game->map->data[y][x] == 'C')
++// 			{
++// 				init_visited(visited, game->map->y, game->map->x);
++// 				if (!check_collectibles_path(game, start_x, start_y, visited))
++// 				{
++// 					free_double_pointer(visited, game->map->y);
++// 					return (0);
++// 				}
++// 			}
++// 			x++;
++// 		}
++// 		y++;
++// 	}
++// 	free_double_pointer(visited, game->map->y);
++// 	return (1);
++// }
++
++int check_current_path(t_game *game)
+ {
+-	int		start_x;
+-	int		start_y;
+-	char	**visited;
+-	int		y;
+-	int		x;
++    char **visited;
++    int result;
++    int start_x;
++    int start_y;
+ 
+-	start_x = game->player_x;
+-	start_y = game->player_y;
+-	visited = malloc((game->map->y + 1) * sizeof(char *));
+-	if (!visited)
+-		return (0);
+-	y = 0;
+-	while (y < game->map->y)
+-	{
+-		visited[y] = malloc((game->map->x + 1) * sizeof(char));
+-		if (!visited[y])
+-		{
+-			free_double_pointer(visited, y);
+-			return (0);
+-		}
+-		y++;
+-	}
+-	visited[game->map->y] = 0;
+-	init_visited(visited, game->map->y, game->map->x);
+-	if (!check_valid_path(game, start_x, start_y, visited))
+-	{
+-		free_double_pointer(visited, game->map->y);
+-		return (0);
+-	}
+-	y = 0;
+-	while (y < game->map->y)
+-	{
+-		x = 0;
+-		while (x < game->map->x)
+-		{
+-			if (game->map->data[y][x] == 'C')
+-			{
+-				init_visited(visited, game->map->y, game->map->x);
+-				if (!check_collectibles_path(game, start_x, start_y, visited))
+-				{
+-					free_double_pointer(visited, game->map->y);
+-					return (0);
+-				}
+-			}
+-			x++;
+-		}
+-		y++;
+-	}
+-	free_double_pointer(visited, game->map->y);
+-	return (1);
++    visited = malloc((game->map->y + 1) * sizeof(char *));
++    if (!visited)
++        return (0);
++    if (!check_current_path_part1(game, visited, &start_x, &start_y))
++    {
++        free(visited);
++        return (0);
++    }
++    result = check_current_path_part2(game, visited, start_x, start_y);
++    free_double_pointer(visited, game->map->y);
++    return (result);
+ }
+diff --git a/src/map.c b/src/map.c
+index c02eb53..5506f59 100644
+--- a/src/map.c
++++ b/src/map.c
+@@ -6,7 +6,7 @@
+ /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+ /*                                                +#+#+#+#+#+   +#+           */
+ /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
+-/*   Updated: 2024/07/21 18:43:09 by syonekur         ###   ########.fr       */
++/*   Updated: 2024/07/21 21:31:00 by syonekur         ###   ########.fr       */
+ /*                                                                            */
+ /* ************************************************************************** */
+ 
+@@ -38,8 +38,11 @@ int	cnt_map_size(char *filename, t_game *game, t_map *map)
+ 	}
+ 	map->x = 0;
+ 	map->y = 0;
+-	while ((line = get_next_line(fd)) != NULL)
++	while (1)
+ 	{
++		line = get_next_line(fd);
++		if (line == NULL)
++			break ;
+ 		if (line[0] != '\n')
+ 			map->y++;
+ 		if (map->y == 1)
+@@ -52,67 +55,69 @@ int	cnt_map_size(char *filename, t_game *game, t_map *map)
+ 	return (0);
+ }
+ 
+-int	validate_map(t_map *map)
+-{
+-	int	player_cnt;
+-	int	exit_cnt;
+-	int	collected;
+-	int	x;
+-	int	y;
++// int	validate_map(t_map *map)
++// {
++// 	int	player_cnt;
++// 	int	exit_cnt;
++// 	int	collected;
++// 	int	x;
++// 	int	y;
++
++// 	player_cnt = 0;
++// 	exit_cnt = 0;
++// 	collected = 0;
++// 	if (map == NULL || map->data == NULL)
++// 	{
++// 		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
++// 		return (1);
++// 	}
++// 	y = 0;
++// 	while (y < map->y)
++// 	{
++// 		if (map->data[y] == NULL)
++// 		{
++// 			ft_putstr_fd("Error\nMap data row is NULL\n", 2);
++// 			return (1);
++// 		}
++// 		if ((int)ft_strlen(map->data[y]) != map->x)
++// 		{
++// 			ft_putstr_fd("Error\nMap has to be rectangular\n", 2);
++// 			return (1);
++// 		}
++// 		x = 0;
++// 		while (x < map->x)
++// 		{
++// 			if (map->data[y][x] == 'P')
++// 				player_cnt++;
++// 			else if (map->data[y][x] == 'E')
++// 				exit_cnt++;
++// 			else if (map->data[y][x] == 'C')
++// 				collected++;
++// 			else if (map->data[y][x] != '0' && map->data[y][x] != '1')
++// 			{
++// 				ft_putstr_fd("Error\nInvalid character in map\n", 2);
++// 				return (1);
++// 			}
++// 			else if (((y == 0) || (x == 0) || (y == map->y - 1) || (x == map->x
++// 						- 1)) && map->data[y][x] != '1')
++// 			{
++// 				ft_putstr_fd("Error\nMap borders must be covered by walls\n",
++// 					2);
++// 				return (1);
++// 			}
++// 			x++;
++// 		}
++// 		y++;
++// 	}
++// 	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
++// 	{
++// 		ft_putstr_fd("Error\nInvalid number of players, exits or collectibles\n", 2);
++// 		return (1);
++// 	}
++// 	return (0);
++// }
++
+ 
+-	player_cnt = 0;
+-	exit_cnt = 0;
+-	collected = 0;
+-	if (map == NULL || map->data == NULL)
+-	{
+-		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
+-		return (1);
+-	}
+-	y = 0;
+-	while (y < map->y)
+-	{
+-		if (map->data[y] == NULL)
+-		{
+-			ft_putstr_fd("Error\nMap data row is NULL\n", 2);
+-			return (1);
+-		}
+-		if ((int)ft_strlen(map->data[y]) != map->x)
+-		{
+-			ft_putstr_fd("Error\nMap has to be rectangular\n", 2);
+-			return (1);
+-		}
+-		x = 0;
+-		while (x < map->x)
+-		{
+-			if (map->data[y][x] == 'P')
+-				player_cnt++;
+-			else if (map->data[y][x] == 'E')
+-				exit_cnt++;
+-			else if (map->data[y][x] == 'C')
+-				collected++;
+-			else if (map->data[y][x] != '0' && map->data[y][x] != '1')
+-			{
+-				ft_putstr_fd("Error\nInvalid character in map\n", 2);
+-				return (1);
+-			}
+-			else if (((y == 0) || (x == 0) || (y == map->y - 1) || (x == map->x
+-						- 1)) && map->data[y][x] != '1')
+-			{
+-				ft_putstr_fd("Error\nMap borders must be covered by walls\n",
+-					2);
+-				return (1);
+-			}
+-			x++;
+-		}
+-		y++;
+-	}
+-	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
+-	{
+-		ft_putstr_fd("Error\nInvalid number of players, exits, or collectibles\n", 2);
+-		return (1);
+-	}
+-	return (0);
+-}
+ 
+ int	create_map(char *filename, t_map *map)
+ {
+@@ -125,8 +130,11 @@ int	create_map(char *filename, t_map *map)
+ 	if (fd == -1)
+ 		return (1);
+ 	i = 0;
+-	while ((line = get_next_line(fd)) != NULL)
++	while (1)
+ 	{
++		line = get_next_line(fd);
++		if (line == NULL)
++			break ;
+ 		len = ft_strlen(line);
+ 		if (line[len - 1] == '\n')
+ 			len--;
+@@ -157,3 +165,28 @@ int	create_map(char *filename, t_map *map)
+ 	}
+ 	return (validate_map(map));
+ }
++
++int validate_map(t_map *map)
++{
++    int player_cnt;
++    int exit_cnt;
++    int collected;
++
++    player_cnt = 0;
++    exit_cnt = 0;
++    collected = 0;
++    if (map == NULL || map->data == NULL)
++    {
++        ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
++        return (1);
++    }
++    if (validate_map_borders(map) || validate_map_contents(map, &player_cnt, &exit_cnt, &collected))
++        return (1);
++    if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
++    {
++        ft_putstr_fd("Error\n", 2);
++        ft_putstr_fd("Invalid number of players, exits, or collectibles\n", 2);
++        return (1);
++    }
++    return (0);
++}
+\ No newline at end of file
+diff --git a/src/utils.c b/src/utils.c
+index eab8866..fe58671 100644
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -6,7 +6,7 @@
+ /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+ /*                                                +#+#+#+#+#+   +#+           */
+ /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
+-/*   Updated: 2024/07/21 18:45:18 by syonekur         ###   ########.fr       */
++/*   Updated: 2024/07/21 20:53:43 by syonekur         ###   ########.fr       */
+ /*                                                                            */
+ /* ************************************************************************** */
+ 
+@@ -25,29 +25,6 @@ void	free_double_pointer(char **ptr, int height)
+ 	free(ptr);
+ }
+ 
+-// void	free_resources(t_game *game)
+-// {
+-// 	if (game->img_wall)
+-// 		mlx_destroy_image(game->mlx_ptr, game->img_wall);
+-// 	if (game->img_empty)
+-// 		mlx_destroy_image(game->mlx_ptr, game->img_empty);
+-// 	if (game->img_player)
+-// 		mlx_destroy_image(game->mlx_ptr, game->img_player);
+-// 	if (game->img_collectible)
+-// 		mlx_destroy_image(game->mlx_ptr, game->img_collectible);
+-// 	if (game->img_exit)
+-// 		mlx_destroy_image(game->mlx_ptr, game->img_exit);
+-// 	if (game->win_ptr)
+-// 		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
+-// 	if (game->map->data)
+-// 		free_double_pointer(game->map->data, game->map->y);
+-// 	if (game->mlx_ptr)
+-// 	{
+-// 		mlx_destroy_display(game->mlx_ptr);
+-// 		free(game->mlx_ptr);
+-// 	}
+-// }
+-
+ void	free_resources(t_game *game)
+ {
+ 	if (game->img_wall)
+@@ -83,13 +60,6 @@ void	free_resources(t_game *game)
+ 	}
+ }
+ 
+-// int	on_destroy(t_game *game)
+-// {
+-// 	free_resources(game);
+-// 	exit(0);
+-// 	return (0);
+-// }
+-
+ int	on_destroy(t_game *game)
+ {
+ 	mlx_loop_end(game->mlx_ptr);
