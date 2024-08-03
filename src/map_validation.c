@@ -6,13 +6,13 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/07/21 20:09:26 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/03 17:33:48 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	validate_map_borders(t_map *map)
+int	check_map_borders(t_map *map)
 {
 	int	x;
 	int	y;
@@ -37,7 +37,7 @@ int	validate_map_borders(t_map *map)
 	return (0);
 }
 
-int	validate_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
+int	check_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
 		int *collected)
 {
 	int	x;

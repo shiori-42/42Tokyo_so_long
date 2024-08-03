@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/07/21 22:07:51 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/03 21:32:29 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,12 @@ void	load_img(t_game *game)
 	}
 }
 
-void	init_game(t_game *game, t_map *map)
+void	init_game(t_game *game)
 {
 	int	x;
 	int	y;
 
 	load_img(game);
-	game->map = map;
 	game->collected = 0;
 	game->collectibles = 0;
 	game->move_cnt = 0;

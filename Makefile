@@ -22,7 +22,6 @@ $(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
 
 $(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
 	$(CC) $(OBJS) $(MLX) $(LIBFT) -o $(NAME)
-	@echo "Executable $(NAME) created."
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
@@ -32,15 +31,13 @@ $(MLX_LIB):
 
 clean:
 	$(MAKE) clean -C $(LIBFT_DIR)
-	$(MAKE) clean -C $(MLX_DIR) || true
+	$(MAKE) clean -C $(MLX_DIR)
 	rm -f $(OBJS)
-	@echo "Object files cleaned."
 
 fclean: clean
 	$(MAKE) fclean -C $(LIBFT_DIR)
-	-$(MAKE) fclean -C $(MLX_DIR) || true
+	$(MAKE) fclean -C $(MLX_DIR)
 	rm -f $(NAME)
-	@echo "Executable $(NAME) removed."
 
 re: fclean all
 
