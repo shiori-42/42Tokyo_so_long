@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 23:00:55 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/03 23:18:00 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	setup_game(t_game *game, char *filename)
 	return (0);
 }
 
-void	main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_game	game;
 

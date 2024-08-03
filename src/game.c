@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 21:32:29 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/03 23:17:05 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	init_game(t_game *game)
 	game->collected = 0;
 	game->collectibles = 0;
 	game->move_cnt = 0;
-	y = 0;
-	while (y < game->map->y)
+	y = -1;
+	while (++y < game->map->y)
 	{
-		x = 0;
-		while (x < game->map->x)
+		x = -1;
+		while (++x < game->map->x)
 		{
 			if (game->map->data[y][x] == 'P')
 			{
@@ -60,9 +60,7 @@ void	init_game(t_game *game)
 			{
 				game->collectibles++;
 			}
-			x++;
 		}
-		y++;
 	}
 }
 
@@ -123,11 +121,11 @@ void	render_map(t_game *game)
 	void	*img;
 
 	mlx_clear_window(game->mlx_ptr, game->win_ptr);
-	y = 0;
-	while (y < game->map->y)
+	y = -1;
+	while (++y < game->map->y)
 	{
-		x = 0;
-		while (x < game->map->x)
+		x = -1;
+		while (++x < game->map->x)
 		{
 			if (game->map->data[y][x] == '1')
 				img = game->img_wall;
@@ -141,8 +139,6 @@ void	render_map(t_game *game)
 				img = game->img_player;
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x
 				* TILE_SIZE, y * TILE_SIZE);
-			x++;
 		}
-		y++;
 	}
 }
