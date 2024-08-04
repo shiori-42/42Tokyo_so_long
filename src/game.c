@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/04 03:06:20 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/04 17:30:11 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ void	load_images(t_game *game)
 	int	width;
 	int	height;
 
-	game->img_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM, &width,
+	game->image_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM, &width,
 			&height);
-	game->img_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM, &width,
+	game->image_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM, &width,
 			&height);
-	game->img_player = mlx_xpm_file_to_image(game->mlx_ptr, PLAYER_XPM, &width,
-			&height);
-	game->img_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
+	game->image_player = mlx_xpm_file_to_image(game->mlx_ptr, PLAYER_XPM,
+			&width, &height);
+	game->image_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
 			COLLECTIBLE_XPM, &width, &height);
-	game->img_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM, &width,
+	game->image_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM, &width,
 			&height);
-	if (!game->img_wall || !game->img_empty || !game->img_player
-		|| !game->img_collectible || !game->img_exit)
+	if (!game->image_wall || !game->image_empty || !game->image_player
+		|| !game->image_collectible || !game->image_exit)
 	{
 		ft_putstr_fd("Error\nFailed to load textures\n", 2);
 		free_resources(game);
@@ -44,7 +44,7 @@ void	init_game(t_game *game)
 	load_images(game);
 	game->collected = 0;
 	game->collectibles = 0;
-	game->move_cnt = 0;
+	game->move_count = 0;
 	y = -1;
 	while (++y < game->map->y)
 	{
@@ -85,9 +85,9 @@ void	ft_move(t_game *game, int new_x, int new_y)
 	game->player_x = new_x;
 	game->player_y = new_y;
 	game->map->data[new_y][new_x] = 'P';
-	game->move_cnt++;
+	game->move_count++;
 	write(1, "Moves: ", 7);
-	ft_putnbr_fd(game->move_cnt, 1);
+	ft_putnbr_fd(game->move_count, 1);
 	write(1, "\n", 1);
 	render_map(game);
 }
@@ -118,7 +118,7 @@ void	render_map(t_game *game)
 {
 	int		x;
 	int		y;
-	void	*img;
+	void	*image;
 
 	mlx_clear_window(game->mlx_ptr, game->win_ptr);
 	y = -1;
@@ -128,16 +128,16 @@ void	render_map(t_game *game)
 		while (++x < game->map->x)
 		{
 			if (game->map->data[y][x] == '1')
-				img = game->img_wall;
+				image = game->image_wall;
 			else if (game->map->data[y][x] == '0')
-				img = game->img_empty;
+				image = game->image_empty;
 			else if (game->map->data[y][x] == 'C')
-				img = game->img_collectible;
+				image = game->image_collectible;
 			else if (game->map->data[y][x] == 'E')
-				img = game->img_exit;
+				image = game->image_exit;
 			else if (game->map->data[y][x] == 'P')
-				img = game->img_player;
-			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img, x
+				image = game->image_player;
+			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, image, x
 				* TILE_SIZE, y * TILE_SIZE);
 		}
 	}

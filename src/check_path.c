@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 21:11:00 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:36:47 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,42 +18,39 @@ int	is_valid_move(t_game *game, int x, int y, char **visited)
 		&& game->map->data[y][x] != '1' && visited[y][x] == '0');
 }
 
-int	check_exit_path(t_game *game, int x, int y, char **visited)
+int	check_reachable_exit(t_game *game, int x, int y, char **visited)
 {
 	if (game->map->data[y][x] == 'E')
 		return (1);
 	visited[y][x] = '1';
-	if (is_valid_move(game, x + 1, y, visited) && check_exit_path(game, x + 1,
-			y, visited))
+	if (is_valid_move(game, x + 1, y, visited) && check_reachable_exit(game, x
+			+ 1, y, visited))
 		return (1);
-	if (is_valid_move(game, x - 1, y, visited) && check_exit_path(game, x - 1,
-			y, visited))
+	if (is_valid_move(game, x - 1, y, visited) && check_reachable_exit(game, x
+			- 1, y, visited))
 		return (1);
-	if (is_valid_move(game, x, y + 1, visited) && check_exit_path(game, x, y
-			+ 1, visited))
+	if (is_valid_move(game, x, y + 1, visited) && check_reachable_exit(game, x,
+			y + 1, visited))
 		return (1);
-	if (is_valid_move(game, x, y - 1, visited) && check_exit_path(game, x, y
-			- 1, visited))
+	if (is_valid_move(game, x, y - 1, visited) && check_reachable_exit(game, x,
+			y - 1, visited))
 		return (1);
 	return (0);
 }
 
-int	check_collectibles_path(t_game *game, int x, int y, char **visited)
+int	count_reachable_collectibles(t_game *game, int x, int y, char **visited)
 {
-	if (game->map->data[y][x] == 'C')
-		return (1);
+	int	count;
+
+	count = 0;
+	if (!is_valid_move(game, x, y, visited))
+		return (0);
 	visited[y][x] = '1';
-	if (is_valid_move(game, x + 1, y, visited) && check_collectibles_path(game,
-			x + 1, y, visited))
-		return (1);
-	if (is_valid_move(game, x - 1, y, visited) && check_collectibles_path(game,
-			x - 1, y, visited))
-		return (1);
-	if (is_valid_move(game, x, y + 1, visited) && check_collectibles_path(game,
-			x, y + 1, visited))
-		return (1);
-	if (is_valid_move(game, x, y - 1, visited) && check_collectibles_path(game,
-			x, y - 1, visited))
-		return (1);
-	return (0);
+	if (game->map->data[y][x] == 'C')
+		count++;
+	count += count_reachable_collectibles(game, x + 1, y, visited);
+	count += count_reachable_collectibles(game, x - 1, y, visited);
+	count += count_reachable_collectibles(game, x, y + 1, visited);
+	count += count_reachable_collectibles(game, x, y - 1, visited);
+	return (count);
 }

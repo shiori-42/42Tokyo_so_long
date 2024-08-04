@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/04 03:02:38 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/04 17:40:09 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_file_name(char *file_name)
 	return (0);
 }
 
-int	cnt_map_size(char *filename, t_game *game)
+int	count_map_size(char *filename, t_game *game)
 {
 	char	*line;
 	int		fd;
@@ -93,5 +93,3 @@ int	create_map(t_game *game, char *filename)
 	close(fd);
 	return (0);
 }
-
-

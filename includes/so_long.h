@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/04 03:06:20 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/04 17:37:36 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef struct s_img
+typedef struct s_image
 {
 	void	*player_up;
 	void	*player_left;
 	void	*player_right;
 	void	*player_down;
 	void	*background;
-}			t_img;
+}			t_image;
 
 typedef struct s_map
 {
@@ -41,16 +41,16 @@ typedef struct s_game
 {
 	void	*mlx_ptr;
 	void	*win_ptr;
-	void	*img_wall;
-	void	*img_empty;
-	void	*img_player;
-	void	*img_collectible;
-	void	*img_exit;
+	void	*image_wall;
+	void	*image_empty;
+	void	*image_player;
+	void	*image_collectible;
+	void	*image_exit;
 	int		player_x;
 	int		player_y;
 	int		collected;
 	int		collectibles;
-	int		move_cnt;
+	int		move_count;
 	t_map	*map;
 }			t_game;
 
@@ -72,30 +72,26 @@ typedef struct s_game
 
 void		free_double_pointer(char **ptr, int height);
 void		free_resources(t_game *game);
-void		handle_error(t_game *game, char *str, int num);
+void		handle_error(t_game *game, char *msg, int num);
 int			ft_exit(t_game *game);
 int			check_file_name(char *file_name);
-int			cnt_map_size(char *filename, t_game *game);
+int			count_map_size(char *filename, t_game *game);
 int			check_map_borders_and_contents(t_map *map);
 int			create_map(t_game *game, char *filename);
 void		init_game(t_game *game);
 int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
 int			is_valid_path(t_game *game);
-void		load_imagess(t_game *game);
+void		load_images(t_game *game);
 void		ft_move(t_game *game, int new_x, int new_y);
 void		winner(t_game *game);
-int			is_valid_path_part1(t_game *game, char **visited, int *start_x,
-				int *start_y);
-int			is_valid_path_part2(t_game *game, char **visited, int start_x,
-				int start_y);
 int			check_map_borders(t_map *map);
-int			check_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
+int			check_map_contents(t_map *map, int *player_count, int *exit_count,
 				int *collected);
 int			is_valid_move(t_game *game, int x, int y, char **visited);
-int			check_exit_path(t_game *game, int x, int y, char **visited);
-void		init_visited(char **visited, int height, int width);
-int			check_collectibles_path(t_game *game, int x, int y, char **visited);
+int			check_reachable_exit(t_game *game, int x, int y, char **visited);
+int			count_reachable_collectibles(t_game *game, int x, int y,
+				char **visited);
 int			validate_and_store_map(t_game *game, char *line, int *i);
 
 #endif

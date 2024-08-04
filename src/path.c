@@ -37,17 +37,23 @@ int	allocate_visited_memory(t_game *game, char ***visited)
 int	is_valid_path(t_game *game)
 {
 	char	**visited;
-	int		result;
-	int		start_x;
-	int		start_y;
+	int		exit_found;
+	int		collectibles_found;
+	int		y;
 
-	start_x = game->player_x;
-	start_y = game->player_y;
 	visited = NULL;
 	if (allocate_visited_memory(game, &visited))
-		return (1);
-	result = (check_collectibles_path(game, start_x, start_y, visited)
-			&& check_exit_path(game, start_x, start_y, visited));
+		return (0);
+	exit_found = (check_reachable_exit(game, game->player_x, game->player_y,
+				visited));
+	y = 0;
+	while (y < game->map->y)
+	{
+		ft_memset(visited[y], '0', game->map->x);
+		y++;
+	}
+	collectibles_found = count_reachable_collectibles(game, game->player_x,
+			game->player_y, visited);
 	free_double_pointer(visited, game->map->y);
-	return (result);
+	return (exit_found && collectibles_found == game->collectibles);
 }
