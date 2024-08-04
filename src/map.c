@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 18:29:06 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:02:38 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	cnt_map_size(char *filename, t_game *game)
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-	{
-		ft_putstr_fd("Error\nFailed to open file\n", 2);
-		return (1);
-	}
+		handle_error(game, "Failed to open file", 0);
 	game->map->x = 0;
 	game->map->y = 0;
 	while (1)
@@ -50,6 +47,27 @@ int	cnt_map_size(char *filename, t_game *game)
 		free(line);
 	}
 	close(fd);
+	return (0);
+}
+
+int	validate_and_store_map(t_game *game, char *line, int *i)
+{
+	int	len;
+
+	len = ft_strlen(line);
+	if (line[len - 1] == '\n')
+		len--;
+	if (len != game->map->x)
+		return (1);
+	game->map->data[*i] = ft_strtrim(line, "\n");
+	if (!game->map->data[*i])
+		handle_error(game, "Failed map allocate process\n", 1);
+	(*i)++;
+	if (*i == game->map->y)
+	{
+		if (check_map_borders_and_contents(game->map))
+			handle_error(game, "invalid map\n", 1);
+	}
 	return (0);
 }
 
@@ -76,28 +94,4 @@ int	create_map(t_game *game, char *filename)
 	return (0);
 }
 
-int	check_map_borders_and_contents(t_map *map)
-{
-	int	player_cnt;
-	int	exit_cnt;
-	int	collected;
 
-	player_cnt = 0;
-	exit_cnt = 0;
-	collected = 0;
-	if (map == NULL || map->data == NULL)
-	{
-		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
-		return (1);
-	}
-	if (check_map_borders(map) || check_map_contents(map, &player_cnt,
-			&exit_cnt, &collected))
-		return (1);
-	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
-	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putstr_fd("Invalid number of players, exits, or collectibles\n", 2);
-		return (1);
-	}
-	return (0);
-}

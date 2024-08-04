@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 23:17:05 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:06:20 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	load_img(t_game *game)
+void	load_images(t_game *game)
 {
 	int	width;
 	int	height;
@@ -41,7 +41,7 @@ void	init_game(t_game *game)
 	int	x;
 	int	y;
 
-	load_img(game);
+	load_images(game);
 	game->collected = 0;
 	game->collectibles = 0;
 	game->move_cnt = 0;

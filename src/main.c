@@ -3,23 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/03 23:18:00 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:10:09 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	handle_error(t_game *game, char *str, int num)
+void	handle_error(t_game *game, char *msg, int num)
 {
+	if(msg)
+	{
+		ft_putstr_fd("Error\n", 2);
+		ft_putstr_fd(msg, 2);
+	}
 	if (num)
 	{
 		free_resources(game);
 	}
-	ft_putstr_fd("Error\n", 2);
-	ft_putstr_fd(str, 2);
 	exit(EXIT_FAILURE);
 }
 
@@ -90,6 +93,7 @@ int	main(int argc, char **argv)
 		handle_error(&game, "No valid path in map\n", 1);
 	render_map(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
+	mlx_hook(game.win_ptr, 17, 1L << 17, ft_exit, &game);
 	mlx_loop(game.mlx_ptr);
 	return (EXIT_SUCCESS);
 }

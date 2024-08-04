@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_validation.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/03 17:33:48 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:27:47 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,31 @@ int	check_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
 			x++;
 		}
 		y++;
+	}
+	return (0);
+}
+int	check_map_borders_and_contents(t_map *map)
+{
+	int	player_cnt;
+	int	exit_cnt;
+	int	collected;
+
+	player_cnt = 0;
+	exit_cnt = 0;
+	collected = 0;
+	if (map == NULL || map->data == NULL)
+	{
+		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
+		return (1);
+	}
+	if (check_map_borders(map) || check_map_contents(map, &player_cnt,
+			&exit_cnt, &collected))
+		return (1);
+	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
+	{
+		ft_putstr_fd("Error\n", 2);
+		ft_putstr_fd("Invalid number of players, exits, or collectibles\n", 2);
+		return (1);
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 19:14:14 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/03 22:36:25 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/04 03:06:20 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,9 @@ void		init_game(t_game *game);
 int			handle_keypress(int keycode, t_game *game);
 void		render_map(t_game *game);
 int			is_valid_path(t_game *game);
-void		load_img(t_game *game);
+void		load_imagess(t_game *game);
 void		ft_move(t_game *game, int new_x, int new_y);
 void		winner(t_game *game);
-void		free_map_data(char **data, int height);
 int			is_valid_path_part1(t_game *game, char **visited, int *start_x,
 				int *start_y);
 int			is_valid_path_part2(t_game *game, char **visited, int start_x,
