@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/17 18:39:44 by syonekur          #+#    #+#             */
+/*   Updated: 2024/08/17 18:41:09 by syonekur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
@@ -42,7 +54,7 @@ typedef struct s_game
 	t_map	*map;
 }			t_game;
 
-#define MAP_EXTENSION ".ber"
+# define MAP_EXTENSION ".ber"
 # define WALL_XPM "assets/wall.xpm"
 # define EMPTY_XPM "assets/empty.xpm"
 # define PLAYER_XPM "assets/player.xpm"
@@ -97,7 +109,7 @@ int			check_reachable_exit(t_game *game, int x, int y, char **visited);
 int			count_reachable_collectibles(t_game *game, int x, int y,
 				char **visited);
 int			validate_and_store_map(t_game *game, char *line, int *i);
-int	handle_expose(t_game *game);
-int	close_handler(t_game *game);
+int			handle_expose(t_game *game);
+int			close_handler(t_game *game);
 
 #endif

@@ -6,9 +6,11 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/17 18:28:40 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/17 18:57:59 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// first submission
 
 #include "so_long.h"
 
