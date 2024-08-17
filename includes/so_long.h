@@ -42,6 +42,7 @@ typedef struct s_game
 	t_map	*map;
 }			t_game;
 
+#define MAP_EXTENSION ".ber"
 # define WALL_XPM "assets/wall.xpm"
 # define EMPTY_XPM "assets/empty.xpm"
 # define PLAYER_XPM "assets/player.xpm"
@@ -59,6 +60,7 @@ typedef struct s_game
 #  define KEY_LEFT 123
 #  define KEY_DOWN 125
 #  define KEY_RIGHT 124
+#  define KEY_Q 12
 # else
 #  define KEY_ESC 65307
 #  define KEY_W 119
@@ -69,6 +71,7 @@ typedef struct s_game
 #  define KEY_LEFT 65361
 #  define KEY_DOWN 65364
 #  define KEY_RIGHT 65363
+#  define KEY_Q 113
 # endif
 
 void		free_double_pointer(char **ptr, int height);
@@ -94,5 +97,7 @@ int			check_reachable_exit(t_game *game, int x, int y, char **visited);
 int			count_reachable_collectibles(t_game *game, int x, int y,
 				char **visited);
 int			validate_and_store_map(t_game *game, char *line, int *i);
+int	handle_expose(t_game *game);
+int	close_handler(t_game *game);
 
 #endif

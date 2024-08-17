@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/04 17:30:11 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/17 13:56:15 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ void	ft_move(t_game *game, int new_x, int new_y)
 	{
 		if (game->collected == game->collectibles)
 			winner(game);
-		else
-			ft_exit(game);
 		return ;
 	}
 	game->map->data[game->player_y][game->player_x] = '0';
@@ -86,9 +84,7 @@ void	ft_move(t_game *game, int new_x, int new_y)
 	game->player_y = new_y;
 	game->map->data[new_y][new_x] = 'P';
 	game->move_count++;
-	write(1, "Moves: ", 7);
-	ft_putnbr_fd(game->move_count, 1);
-	write(1, "\n", 1);
+	ft_printf("Moves: %d\n", game->move_count);
 	render_map(game);
 }
 
@@ -99,7 +95,7 @@ int	handle_keypress(int keycode, t_game *game)
 
 	new_x = game->player_x;
 	new_y = game->player_y;
-	if (keycode == KEY_ESC)
+	if (keycode == KEY_ESC || keycode == KEY_Q)
 		ft_exit(game);
 	else if (keycode == KEY_W || keycode == KEY_UP)
 		new_y--;

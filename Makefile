@@ -14,7 +14,8 @@ SRC_FILES = check_path.c \
             map.c \
             map_validation.c \
             path.c \
-            utils.c
+            utils.c \
+            handler.c
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS = $(SRCS:.c=.o)
 
