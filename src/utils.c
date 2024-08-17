@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/07 20:03:59 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/17 18:29:11 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	free_window_and_map(t_game *game)
 	}
 	if (game->mlx_ptr)
 	{
-		// mlx_destroy_display(game->mlx_ptr);
+		mlx_destroy_display(game->mlx_ptr);
 		free(game->mlx_ptr);
 		game->mlx_ptr = NULL;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/17 14:47:11 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/17 18:28:40 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,58 +80,21 @@ int	setup_game(t_game *game, char *filename)
 	return (0);
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	t_game	game;
-
-// 	if (argc != 2)
-// 		handle_error(NULL, "Usage: ./so_long <map.filename>\n", 0);
-// 	if (setup_game(&game, argv[1]))
-// 		handle_error(&game, "Failed to setup game\n", 1);
-// 	init_game(&game);
-// 	if (!is_valid_path(&game))
-// 		handle_error(&game, "No valid path in map\n", 1);
-// 	render_map(&game);
-// 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
-// 	mlx_hook(game.win_ptr, 17, 0, close_handler, &game);
-// 	mlx_expose_hook(game.win_ptr, handle_expose, &game);
-// 	mlx_loop(game.mlx_ptr);
-// 	return (EXIT_SUCCESS);
-// }
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_game  game;
+	t_game	game;
 
-    if (argc != 2)
-        handle_error(NULL, "Usage: ./so_long <map.filename>\n", 0);
-    if (check_file_name(argv[1]))
-        return (EXIT_FAILURE);
-    ft_memset(&game, 0, sizeof(t_game));
-    game.mlx_ptr = mlx_init();
-    if (!game.mlx_ptr)
-        handle_error(&game, "Failed to initialize MLX\n", 1);
-    game.map = malloc(sizeof(t_map));
-    if (!game.map)
-        handle_error(&game, "Memory allocation failed\n", 1);
-    if (count_map_size(argv[1], &game))
-        return (EXIT_FAILURE);
-    game.map->data = (char **)malloc((game.map->y + 1) * sizeof(char *));
-    if (!game.map->data)
-        handle_error(&game, "Failed to allocate memory for map data\n", 1);
-    if (create_map(&game, argv[1]))
-        return (EXIT_FAILURE);
-    game.win_ptr = mlx_new_window(game.mlx_ptr, game.map->x * TILE_SIZE,
-            game.map->y * TILE_SIZE, "So Long");
-    if (!game.win_ptr)
-        handle_error(&game, "Failed to create window\n", 1);
-    init_game(&game);
-    if (!is_valid_path(&game))
-        handle_error(&game, "No valid path in map\n", 1);
-    render_map(&game);
-    mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
-    mlx_hook(game.win_ptr, 17, 0, close_handler, &game);
-    mlx_expose_hook(game.win_ptr, handle_expose, &game);
-    mlx_loop(game.mlx_ptr);
-    return (EXIT_SUCCESS);
+	if (argc != 2)
+		handle_error(NULL, "Usage: ./so_long <map.filename>\n", 0);
+	if (setup_game(&game, argv[1]))
+		handle_error(&game, "Failed to setup game\n", 1);
+	init_game(&game);
+	if (!is_valid_path(&game))
+		handle_error(&game, "No valid path in map\n", 1);
+	render_map(&game);
+	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
+	mlx_hook(game.win_ptr, 17, 0, close_handler, &game);
+	mlx_expose_hook(game.win_ptr, handle_expose, &game);
+	mlx_loop(game.mlx_ptr);
+	return (EXIT_SUCCESS);
 }
