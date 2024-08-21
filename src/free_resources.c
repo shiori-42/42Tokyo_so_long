@@ -1,42 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   free_resources.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 15:06:23 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:40:08 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+void	free_map_data_until(char **data, int i)
+{
+	while (i > 0)
+	{
+		i--;
+		free(data[i]);
+	}
+	free(data);
+}
+
 void	free_double_pointer(char **ptr, int height)
 {
 	int	y;
 
+	if (!ptr)
+		return ;
 	y = 0;
 	while (y < height)
 	{
-		free(ptr[y]);
+		if (ptr[y])
+			free(ptr[y]);
 		y++;
 	}
 	free(ptr);
+	ptr = NULL;
 }
 
 void	free_images(t_game *game)
 {
-	if (game->image_wall)
-		mlx_destroy_image(game->mlx_ptr, game->image_wall);
-	if (game->image_empty)
-		mlx_destroy_image(game->mlx_ptr, game->image_empty);
-	if (game->image_player)
-		mlx_destroy_image(game->mlx_ptr, game->image_player);
-	if (game->image_collectible)
-		mlx_destroy_image(game->mlx_ptr, game->image_collectible);
-	if (game->image_exit)
-		mlx_destroy_image(game->mlx_ptr, game->image_exit);
+	if (game->images->image_wall)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_wall);
+	if (game->images->image_empty)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_empty);
+	if (game->images->image_player)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_player);
+	if (game->images->image_collectible)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_collectible);
+	if (game->images->image_exit)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_exit);
 }
 
 void	free_window_and_map(t_game *game)
@@ -66,20 +80,10 @@ void	free_window_and_map(t_game *game)
 
 void	free_resources(t_game *game)
 {
-	free_images(game);
-	free_window_and_map(game);
-}
-
-void	free_map_data(char **data, int height)
-{
-	int	i;
-
-	i = 0;
-	while (i < height)
+	if (game)
 	{
-		if (data[i])
-			free(data[i]);
-		i++;
+		free_images(game);
+		free(game->images);
+		free_window_and_map(game);
 	}
-	free(data);
 }

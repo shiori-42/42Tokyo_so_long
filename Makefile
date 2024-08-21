@@ -1,6 +1,6 @@
 NAME = so_long
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 
 MLX_DIR = mlx
 LIBFT_DIR = libft
@@ -8,13 +8,13 @@ SRCS_DIR = src
 INCLUDES = -Iincludes -I$(MLX_DIR) -I$(LIBFT_DIR)/includes
 
 SRC_FILES = check_path.c \
-            game.c \
             main.c \
+            game.c \
             map.c \
             map_validation.c \
             path.c \
-            utils.c \
-            handler.c
+            free_resources.c \
+			
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRC_FILES))
 OBJS = $(SRCS:.c=.o)
 
@@ -36,7 +36,9 @@ GIT_MLX = git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR)
 all: $(NAME)
 
 $(MLX_DIR):
-	$(GIT_MLX)
+	if [ ! -d "$(MLX_DIR)" ]; then \
+	    $(GIT_MLX); \
+	fi
 
 $(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -56,8 +58,8 @@ clean:
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -rf $(LIBFT)
-	rm -rf $(MLX_LIB)
+	$(MAKE) fclean -C $(LIBFT_DIR)
+	$(MAKE) clean -C $(MLX_DIR)
 	rm -f $(NAME)
 
 re: fclean all

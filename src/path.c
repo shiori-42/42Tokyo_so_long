@@ -12,29 +12,49 @@
 
 #include "so_long.h"
 
-int	allocate_visited_memory(t_game *game, char ***visited)
+// void	allocate_visited_memory(t_game *game, char ***visited)
+// {
+// 	int	y;
+
+// 	*visited = malloc((game->map->height) * sizeof(char *));
+// 	if (!*visited)
+// 		handle_error(game, "Failed to allocate memory for visited array\n");
+// 	y = 0;
+// 	while (y < game->map->height)
+// 	{
+// 		(*visited)[y] = malloc((game->map->width + 1) * sizeof(char));
+// 		if (!(*visited)[y])
+// 		{
+// 			free_double_pointer(*visited, y);
+// 			handle_error(game, "Failed to allocate memory for visited row\n");
+// 		}
+// 		ft_memset((*visited)[y], '0', game->map->width + 1);
+// 		y++;
+// 	}
+// }
+
+void	allocate_visited_memory(t_game *game, char ***visited)
 {
 	int	y;
 
-	*visited = malloc((game->map->height) * sizeof(char *));
+	*visited = malloc(game->map->height * sizeof(char *));
 	if (!*visited)
-		return (1);
+		handle_error(game, "Failed to allocate memory for visited array\n");
 	y = 0;
 	while (y < game->map->height)
 	{
-		(*visited)[y] = malloc((game->map->width + 1) * sizeof(char));
+		(*visited)[y] = malloc(game->map->width * sizeof(char));
 		if (!(*visited)[y])
 		{
 			free_double_pointer(*visited, y);
-			return (1);
+			handle_error(game, "Failed to allocate memory for visited row\n");
 		}
-		ft_memset((*visited)[y], '0', game->map->width + 1);
+		ft_memset((*visited)[y], '0', game->map->width);
 		y++;
 	}
-	return (0);
 }
 
-int	is_valid_path(t_game *game)
+void	is_valid_path(t_game *game)
 {
 	char	**visited;
 	int		exit_found;
@@ -42,10 +62,9 @@ int	is_valid_path(t_game *game)
 	int		y;
 
 	visited = NULL;
-	if (allocate_visited_memory(game, &visited))
-		return (0);
-	exit_found = (check_reachable_exit(game, game->player_x, game->player_y,
-				visited));
+	allocate_visited_memory(game, &visited);
+	exit_found = check_reachable_exit(game, game->player_x, game->player_y,
+			visited);
 	y = 0;
 	while (y < game->map->height)
 	{
@@ -55,5 +74,6 @@ int	is_valid_path(t_game *game)
 	collectibles_found = count_reachable_collectibles(game, game->player_x,
 			game->player_y, visited);
 	free_double_pointer(visited, game->map->height);
-	return (exit_found && collectibles_found == game->collectibles);
+	if (!exit_found || collectibles_found != game->collectibles)
+		handle_error(game, "No valid path or missing collectibles\n");
 }

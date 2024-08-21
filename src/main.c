@@ -6,25 +6,20 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 14:00:14 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:43:33 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// first submission
-
 #include "so_long.h"
 
-void	handle_error(t_game *game, char *msg, int num)
+void	handle_error(t_game *game, char *msg)
 {
 	if (msg)
 	{
 		ft_putstr_fd("Error\n", 2);
 		ft_putstr_fd(msg, 2);
 	}
-	if (num)
-	{
-		free_resources(game);
-	}
+	free_resources(game);
 	exit(EXIT_FAILURE);
 }
 
@@ -58,28 +53,27 @@ void	winner(t_game *game)
 	exit(EXIT_SUCCESS);
 }
 
-int	setup_game(t_game *game, char *filename)
+void	setup_game(t_game *game, char *filename)
 {
-	ft_memset(game, 0, sizeof(t_game));
 	game->mlx_ptr = mlx_init();
 	if (!game->mlx_ptr)
-		return (1);
+		handle_error(game, "Failed to initialize mlx\n");
+	game->images = malloc(sizeof(t_images));
+	if (!game->images)
+		handle_error(game, "Failed to allocate memory for images\n");
+	ft_memset(game->images, 0, sizeof(t_images));
 	game->map = malloc(sizeof(t_map));
 	if (!game->map)
-		return (1);
-	if (check_file_name(filename))
-		return (free_resources(game), 1);
-	if (count_map_size(filename, game))
-		return (free_resources(game), 1);
-	game->map->data = (char **)malloc((game->map->height + 1) * sizeof(char *));
-	if (!game->map->data)
-		return (free_resources(game), 1);
+		handle_error(game, "Failed to allocate memory for map\n");
+	ft_memset(game->map, 0, sizeof(t_map));
+	count_map_size(filename, game);
 	create_map(game, filename);
+	if (!game->map->data)
+		handle_error(game, "Failed to allocate memory for map data\n");
 	game->win_ptr = mlx_new_window(game->mlx_ptr, game->map->width * TILE_SIZE,
 			game->map->height * TILE_SIZE, "So Long");
 	if (!game->win_ptr)
-		return (free_resources(game), 1);
-	return (0);
+		handle_error(game, "Failed to create a new window\n");
 }
 
 int	main(int argc, char **argv)
@@ -87,21 +81,14 @@ int	main(int argc, char **argv)
 	t_game	game;
 
 	if (argc != 2)
-		handle_error(NULL, "Usage: ./so_long <map.filename>\n", 0);
-	if (setup_game(&game, argv[1]))
-		handle_error(&game, "Failed to setup game\n", 1);
+		handle_error(NULL, "Usage: ./so_long <map_filename>\n");
+	ft_memset(&game, 0, sizeof(t_game));
+	check_file_name(argv[1]);
+	setup_game(&game, argv[1]);
 	init_game(&game);
-	if (!is_valid_path(&game))
-		handle_error(&game, "No valid path in map\n", 1);
+	is_valid_path(&game);
 	render_map(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
-	mlx_hook(game.win_ptr, 17, 0, close_handler, &game);
-	mlx_expose_hook(game.win_ptr, handle_expose, &game);
 	mlx_loop(game.mlx_ptr);
 	return (EXIT_SUCCESS);
 }
-
-// __attribute__((destructor)) static void destructor()
-// {
-// 	system("leaks -q so_long");
-// }

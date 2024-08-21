@@ -6,13 +6,13 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/21 15:11:29 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:45:24 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	check_map_borders(t_game *game)
+void	check_map_borders(t_game *game)
 {
 	int	x;
 	int	y;
@@ -26,15 +26,14 @@ int	check_map_borders(t_game *game)
 			if (((y == 0) || (x == 0) || (y == game->map->height - 1)
 					|| (x == game->map->width - 1))
 				&& game->map->data[y][x] != '1')
-				handle_error(game, "Map borders must be covered by walls\n", 1);
+				handle_error(game, "Map borders must be covered by walls\n");
 			x++;
 		}
 		y++;
 	}
-	return (0);
 }
 
-int	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
+void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 		int *collected)
 {
 	int	x;
@@ -54,15 +53,14 @@ int	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 				(*collected)++;
 			else if (game->map->data[y][x] != '0'
 				&& game->map->data[y][x] != '1')
-				handle_error(game, "Invalid character in map", 1);
+				handle_error(game, "Invalid character in map\n");
 			x++;
 		}
 		y++;
 	}
-	return (0);
 }
 
-int	check_map_borders_and_contents(t_game *game)
+void	check_map_borders_and_contents(t_game *game)
 {
 	int	player_cnt;
 	int	exit_cnt;
@@ -71,19 +69,8 @@ int	check_map_borders_and_contents(t_game *game)
 	player_cnt = 0;
 	exit_cnt = 0;
 	collected = 0;
-	if (game->map == NULL || game->map->data == NULL)
-	{
-		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
-		return (1);
-	}
-	if (check_map_borders(game) || check_map_contents(game, &player_cnt,
-			&exit_cnt, &collected))
-		return (1);
+	check_map_borders(game);
+	check_map_contents(game, &player_cnt, &exit_cnt, &collected);
 	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
-	{
-		ft_putstr_fd("Error\n", 2);
-		ft_putstr_fd("Invalid number of players, exits, or collectibles\n", 2);
-		return (1);
-	}
-	return (0);
+		handle_error(game, "Invalid number of players,exits,or collectibles\n");
 }

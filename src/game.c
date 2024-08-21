@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 13:58:19 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 16:20:51 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,20 @@ void	load_images(t_game *game)
 	int	width;
 	int	height;
 
-	game->image_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM,
+	game->images->image_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM,
 			&width, &height);
-	game->image_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM,
+	game->images->image_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM,
 			&width, &height);
-	game->image_player = mlx_xpm_file_to_image(game->mlx_ptr, PLAYER_XPM,
-			&width, &height);
-	game->image_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
+	game->images->image_player = mlx_xpm_file_to_image(game->mlx_ptr,
+			PLAYER_XPM, &width, &height);
+	game->images->image_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
 			COLLECTIBLE_XPM, &width, &height);
-	game->image_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM,
+	game->images->image_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM,
 			&width, &height);
-	if (!game->image_wall || !game->image_empty || !game->image_player
-		|| !game->image_collectible || !game->image_exit)
-	{
-		ft_putstr_fd("Error\nFailed to load textures\n", 2);
-		free_resources(game);
-		exit(EXIT_FAILURE);
-	}
+	if (!game->images->image_wall || !game->images->image_empty
+		|| !game->images->image_player || !game->images->image_collectible
+		|| !game->images->image_exit)
+		handle_error(game, "Failed to load textures\n");
 }
 
 void	init_game(t_game *game)
@@ -124,15 +121,15 @@ void	render_map(t_game *game)
 		while (++x < game->map->width)
 		{
 			if (game->map->data[y][x] == '1')
-				image = game->image_wall;
+				image = game->images->image_wall;
 			else if (game->map->data[y][x] == '0')
-				image = game->image_empty;
+				image = game->images->image_empty;
 			else if (game->map->data[y][x] == 'C')
-				image = game->image_collectible;
+				image = game->images->image_collectible;
 			else if (game->map->data[y][x] == 'E')
-				image = game->image_exit;
+				image = game->images->image_exit;
 			else if (game->map->data[y][x] == 'P')
-				image = game->image_player;
+				image = game->images->image_player;
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, image, x
 				* TILE_SIZE, y * TILE_SIZE);
 		}
