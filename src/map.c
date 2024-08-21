@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/17 18:28:54 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 13:26:03 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,17 @@ int	count_map_size(char *filename, t_game *game)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		handle_error(game, "Failed to open file", 0);
-	game->map->x = 0;
-	game->map->y = 0;
+	game->map->width = 0;
+	game->map->height = 0;
 	while (1)
 	{
 		line = get_next_line(fd);
 		if (!line)
 			break ;
 		if (line[0] != '\n')
-			game->map->y++;
-		if (game->map->y == 1)
-			game->map->x = ft_strlen(line) - 1;
+			game->map->height++;
+		if (game->map->height == 1)
+			game->map->width = ft_strlen(line) - 1;
 		free(line);
 	}
 	close(fd);
@@ -57,20 +57,34 @@ int	validate_and_store_map(t_game *game, char *line, int *i)
 	int	len;
 
 	len = ft_strlen(line);
-	if (line[len - 1] == '\n')
-		len--;
-	if (len != game->map->x)
-		return (1);
-	game->map->data[*i] = ft_strtrim(line, "\n");
-	if (!game->map->data[*i])
-		handle_error(game, "Failed map allocate process\n", 1);
-	(*i)++;
-	if (*i == game->map->y)
-	{
-		if (check_map_borders_and_contents(game->map))
-			handle_error(game, "invalid map\n", 1);
+	if (len != game->map->width)
+	{	
+		while  (*i>=0)
+		{	
+			free(game->map->map[*i]);		
+			i--;	
+		}	
+		free(line);
+		handle_error(game, "Failed map is not square\n", 1);
 	}
+	game->map->map[*i] = ft_strdup(line);
+	(*i)++;
+	if (*i == game->map->height)
+		check_map_borders_and_contents(game);
 	return (0);
+}
+char *get_next_line_trimmed(int fd)
+{
+    char *line = get_next_line(fd);
+    if (!line)
+        return NULL;
+
+    char *newline_pos = ft_strchr(line, '\n');
+    if (newline_pos)
+    {
+        *newline_pos = '\0';
+    }
+    return line;
 }
 
 int	create_map(t_game *game, char *filename)
@@ -85,11 +99,11 @@ int	create_map(t_game *game, char *filename)
 	i = 0;
 	while (1)
 	{
-		line = get_next_line(fd);
+		line = get_next_line_trimmed(fd);
 		if (!line)
 			break ;
-		if (validate_and_store_map(game, line, &i))
-			handle_error(game, "Failed map is not square\n", 1);
+		game->map->map[i + 1] = NULL;
+		validate_and_store_map(game, line, &i);
 		free(line);
 	}
 	close(fd);

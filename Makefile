@@ -1,5 +1,5 @@
 NAME = so_long
-CC = cc
+CC = cc　-fsanitize=address -g
 
 # Common flags and directories
 MLX_DIR = mlx
@@ -22,32 +22,40 @@ OBJS = $(SRCS:.c=.o)
 # Detect the OS
 UNAME_S := $(shell uname -s)
 
-# Flags and libraries for macOS
+# Flags and libraries
+CFLAGS = -Werror
+
+# OS-specific settings
 ifeq ($(UNAME_S), Darwin)
+    CC = cc -Wall -Wextra
     CFLAGS += -I/opt/homebrew/Cellar/libx11/1.8.10/include -I/opt/homebrew/Cellar/libxext/1.3.6/include -DGL_SILENCE_DEPRECATION
     LIBS = -L/opt/homebrew/Cellar/libx11/1.8.10/lib -L/opt/homebrew/Cellar/libxext/1.3.6/lib -lXext -lX11 -framework OpenGL -framework AppKit
-    MLX = $(MLX_LIB) -L$(MLX_DIR) $(LIBS)
-# Flags and libraries for Linux
 else
-    CFLAGS += -I/usr/include
-    LIBS = -L/usr/lib/X11 -lXext -lX11
-    MLX = $(MLX_LIB) -L$(MLX_DIR) $(LIBS)
+    CFLAGS += -Wall -Wextra -I/usr/include
+    LIBS = -L/usr/lib/X11 -lXext -lX11 -lm
 endif
 
 # Library targets
 LIBFT = $(LIBFT_DIR)/libft.a
 MLX_LIB = $(MLX_DIR)/libmlx.a
 
+# Git clone command for MLX
+GIT_MLX = git clone https://github.com/42Paris/minilibx-linux.git $(MLX_DIR)
+
 # Default target
 all: $(NAME)
+
+# Ensure MLX directory exists
+$(MLX_DIR):
+	$(GIT_MLX)
 
 # Object file compilation
 $(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Executable linking
-$(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
-	$(CC) $(OBJS) $(MLX) $(LIBFT) -o $(NAME)
+$(NAME): $(MLX_DIR) $(LIBFT) $(MLX_LIB) $(OBJS)
+	$(CC) $(OBJS) $(MLX_LIB) $(LIBFT) $(LIBS) -o $(NAME)
 
 # Build libft
 $(LIBFT):

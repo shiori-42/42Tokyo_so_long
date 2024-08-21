@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/17 18:29:11 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 13:26:03 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,35 +27,37 @@ void	free_double_pointer(char **ptr, int height)
 
 void	free_images(t_game *game)
 {
-	if (game->image_wall)
-		mlx_destroy_image(game->mlx_ptr, game->image_wall);
-	if (game->image_empty)
-		mlx_destroy_image(game->mlx_ptr, game->image_empty);
-	if (game->image_player)
-		mlx_destroy_image(game->mlx_ptr, game->image_player);
-	if (game->image_collectible)
-		mlx_destroy_image(game->mlx_ptr, game->image_collectible);
-	if (game->image_exit)
-		mlx_destroy_image(game->mlx_ptr, game->image_exit);
+	if (game->wall)
+		mlx_destroy_image(game->mlx, game->wall);
+	if (game->tile)
+		mlx_destroy_image(game->mlx, game->tile);
+	if (game->player)
+		mlx_destroy_image(game->mlx, game->player);
+	if (game->item)
+		mlx_destroy_image(game->mlx, game->item);
+	if (game->exit)
+		mlx_destroy_image(game->mlx, game->exit);
 }
 
 void	free_window_and_map(t_game *game)
 {
-	if (game->win_ptr)
+	if (game->mlx)
 	{
-		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-		game->win_ptr = NULL;
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		game->mlx = NULL;
 	}
-	if (game->map && game->map->data)
+	if (game->window)
 	{
-		free_double_pointer(game->map->data, game->map->y);
-		game->map->data = NULL;
+		mlx_destroy_window(game->mlx, game->window);
+		game->window = NULL;
 	}
-	if (game->mlx_ptr)
+	if (game->map && game->map->map)
 	{
-		mlx_destroy_display(game->mlx_ptr);
-		free(game->mlx_ptr);
-		game->mlx_ptr = NULL;
+		printf("here\n");
+		free_double_pointer(game->map->map, game->map->height);
+		printf("end\n");
+		game->map->map = NULL;
 	}
 	if (game->map)
 	{
@@ -83,3 +85,5 @@ void	free_map_data(char **data, int height)
 	}
 	free(data);
 }
+
+

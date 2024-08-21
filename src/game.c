@@ -6,7 +6,7 @@
 /*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/17 13:56:15 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/21 13:26:03 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ void	load_images(t_game *game)
 	int	width;
 	int	height;
 
-	game->image_wall = mlx_xpm_file_to_image(game->mlx_ptr, WALL_XPM, &width,
+	game->wall = mlx_xpm_file_to_image(game->mlx, WALL_XPM, &width,
 			&height);
-	game->image_empty = mlx_xpm_file_to_image(game->mlx_ptr, EMPTY_XPM, &width,
+	game->tile = mlx_xpm_file_to_image(game->mlx, EMPTY_XPM, &width,
 			&height);
-	game->image_player = mlx_xpm_file_to_image(game->mlx_ptr, PLAYER_XPM,
+	game->player = mlx_xpm_file_to_image(game->mlx, PLAYER_XPM,
 			&width, &height);
-	game->image_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
+	game->item = mlx_xpm_file_to_image(game->mlx,
 			COLLECTIBLE_XPM, &width, &height);
-	game->image_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM, &width,
+	game->exit = mlx_xpm_file_to_image(game->mlx, EXIT_XPM, &width,
 			&height);
-	if (!game->image_wall || !game->image_empty || !game->image_player
-		|| !game->image_collectible || !game->image_exit)
+	if (!game->wall || !game->tile || !game->player
+		|| !game->item || !game->exit)
 	{
 		ft_putstr_fd("Error\nFailed to load textures\n", 2);
 		free_resources(game);
@@ -46,17 +46,17 @@ void	init_game(t_game *game)
 	game->collectibles = 0;
 	game->move_count = 0;
 	y = -1;
-	while (++y < game->map->y)
+	while (++y < game->map->height)
 	{
 		x = -1;
-		while (++x < game->map->x)
+		while (++x < game->map->width)
 		{
-			if (game->map->data[y][x] == 'P')
+			if (game->map->map[y][x] == 'P')
 			{
 				game->player_x = x;
 				game->player_y = y;
 			}
-			else if (game->map->data[y][x] == 'C')
+			else if (game->map->map[y][x] == 'C')
 			{
 				game->collectibles++;
 			}
@@ -66,23 +66,23 @@ void	init_game(t_game *game)
 
 void	ft_move(t_game *game, int new_x, int new_y)
 {
-	if (game->map->data[new_y][new_x] == '1')
+	if (game->map->map[new_y][new_x] == '1')
 		return ;
-	if (game->map->data[new_y][new_x] == 'C')
+	if (game->map->map[new_y][new_x] == 'C')
 	{
 		game->collected++;
-		game->map->data[new_y][new_x] = '0';
+		game->map->map[new_y][new_x] = '0';
 	}
-	if (game->map->data[new_y][new_x] == 'E')
+	if (game->map->map[new_y][new_x] == 'E')
 	{
 		if (game->collected == game->collectibles)
 			winner(game);
 		return ;
 	}
-	game->map->data[game->player_y][game->player_x] = '0';
+	game->map->map[game->player_y][game->player_x] = '0';
 	game->player_x = new_x;
 	game->player_y = new_y;
-	game->map->data[new_y][new_x] = 'P';
+	game->map->map[new_y][new_x] = 'P';
 	game->move_count++;
 	ft_printf("Moves: %d\n", game->move_count);
 	render_map(game);
@@ -116,24 +116,24 @@ void	render_map(t_game *game)
 	int		y;
 	void	*image;
 
-	mlx_clear_window(game->mlx_ptr, game->win_ptr);
+	mlx_clear_window(game->mlx, game->window);
 	y = -1;
-	while (++y < game->map->y)
+	while (++y < game->map->height)
 	{
 		x = -1;
-		while (++x < game->map->x)
+		while (++x < game->map->width)
 		{
-			if (game->map->data[y][x] == '1')
-				image = game->image_wall;
-			else if (game->map->data[y][x] == '0')
-				image = game->image_empty;
-			else if (game->map->data[y][x] == 'C')
-				image = game->image_collectible;
-			else if (game->map->data[y][x] == 'E')
-				image = game->image_exit;
-			else if (game->map->data[y][x] == 'P')
-				image = game->image_player;
-			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, image, x
+			if (game->map->map[y][x] == '1')
+				image = game->wall;
+			else if (game->map->map[y][x] == '0')
+				image = game->tile;
+			else if (game->map->map[y][x] == 'C')
+				image = game->item;
+			else if (game->map->map[y][x] == 'E')
+				image = game->exit;
+			else if (game->map->map[y][x] == 'P')
+				image = game->player;
+			mlx_put_image_to_window(game->mlx, game->window, image, x
 				* TILE_SIZE, y * TILE_SIZE);
 		}
 	}

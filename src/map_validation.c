@@ -3,63 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   map_validation.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/04 17:40:19 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 13:26:03 by shiori           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	check_map_borders(t_map *map)
+int	check_map_borders(t_game *game)
 {
 	int	x;
 	int	y;
 
 	y = 0;
-	while (y < map->y)
+	while (y < game->map->height)
 	{
 		x = 0;
-		while (x < map->x)
+		while (x < game->map->width)
 		{
-			if (((y == 0) || (x == 0) || (y == map->y - 1) || (x == map->x - 1))
-				&& map->data[y][x] != '1')
-			{
-				ft_putstr_fd("Error\nMap borders must be covered by walls\n",
-					2);
-				return (1);
-			}
+			if (((y == 0) || (x == 0) || (y == game->map->height-1) || (x == game->map->width-1))
+				&& game->map->map[y][x] != '1')
+				handle_error(game,"Map borders must be covered by walls\n",1);
 			x++;
 		}
 		y++;
 	}
+		printf("x:%d,y=%d",game->map->width,game->map->height);
+		printf("x:%d,y=%d",x,y);
 	return (0);
 }
 
-int	check_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
+int	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 		int *collected)
 {
 	int	x;
 	int	y;
 
 	y = 0;
-	while (y < map->y)
+	while (y < game->map->height)
 	{
 		x = 0;
-		while (x < map->x)
+		while (x <game->map->width)
 		{
-			if (map->data[y][x] == 'P')
+			if (game->map->map[y][x] == 'P')
 				(*player_cnt)++;
-			else if (map->data[y][x] == 'E')
+			else if (game->map->map[y][x] == 'E')
 				(*exit_cnt)++;
-			else if (map->data[y][x] == 'C')
+			else if (game->map->map[y][x] == 'C')
 				(*collected)++;
-			else if (map->data[y][x] != '0' && map->data[y][x] != '1')
-			{
-				ft_putstr_fd("Error\nInvalid character in map\n", 2);
-				return (1);
-			}
+			else if (game->map->map[y][x] != '0' && game->map->map[y][x] != '1')
+				handle_error(game,"Invalid character in map",1);
 			x++;
 		}
 		y++;
@@ -67,7 +62,7 @@ int	check_map_contents(t_map *map, int *player_cnt, int *exit_cnt,
 	return (0);
 }
 
-int	check_map_borders_and_contents(t_map *map)
+int	check_map_borders_and_contents(t_game *game)
 {
 	int	player_cnt;
 	int	exit_cnt;
@@ -76,12 +71,12 @@ int	check_map_borders_and_contents(t_map *map)
 	player_cnt = 0;
 	exit_cnt = 0;
 	collected = 0;
-	if (map == NULL || map->data == NULL)
+	if (game->map == NULL || game->map->map == NULL)
 	{
 		ft_putstr_fd("Error\nMap or map data is NULL\n", 2);
 		return (1);
 	}
-	if (check_map_borders(map) || check_map_contents(map, &player_cnt,
+	if (check_map_borders(game) || check_map_contents(game, &player_cnt,
 			&exit_cnt, &collected))
 		return (1);
 	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
