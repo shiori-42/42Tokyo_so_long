@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 13:40:04 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/21 14:00:14 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 #include "so_long.h"
 
-void handle_error(t_info *game, char *msg, int num)
+void	handle_error(t_game *game, char *msg, int num)
 {
-    if (msg)
-    {
-        ft_putstr_fd("Error\n", 2);
-        ft_putstr_fd(msg, 2);
-    }
-    if (num)
-    {
-        free_resources(game);
-    }
-    exit(EXIT_FAILURE);
+	if (msg)
+	{
+		ft_putstr_fd("Error\n", 2);
+		ft_putstr_fd(msg, 2);
+	}
+	if (num)
+	{
+		free_resources(game);
+	}
+	exit(EXIT_FAILURE);
 }
 
-int	ft_exit(t_info *game)
+int	ft_exit(t_game *game)
 {
 	ft_printf("-----------------------------------------------\n");
 	ft_printf("              Game Over :(                   \n");
@@ -45,7 +45,7 @@ int	ft_exit(t_info *game)
 	exit(EXIT_SUCCESS);
 }
 
-void	winner(t_info *game)
+void	winner(t_game *game)
 {
 	ft_printf("-----------------------------------------------\n");
 	ft_printf("    🎉🎉🎉  Congratulations!!!!  🎉🎉🎉     \n");
@@ -58,11 +58,11 @@ void	winner(t_info *game)
 	exit(EXIT_SUCCESS);
 }
 
-int	setup_game(t_info *game, char *filename)
+int	setup_game(t_game *game, char *filename)
 {
-	ft_memset(game, 0, sizeof(t_info));
-	game->mlx = mlx_init();
-	if (!game->mlx)
+	ft_memset(game, 0, sizeof(t_game));
+	game->mlx_ptr = mlx_init();
+	if (!game->mlx_ptr)
 		return (1);
 	game->map = malloc(sizeof(t_map));
 	if (!game->map)
@@ -71,20 +71,20 @@ int	setup_game(t_info *game, char *filename)
 		return (free_resources(game), 1);
 	if (count_map_size(filename, game))
 		return (free_resources(game), 1);
-	game->map->map = (char **)malloc((game->map->height + 1) * sizeof(char *));
-	if (!game->map->map)
+	game->map->data = (char **)malloc((game->map->height + 1) * sizeof(char *));
+	if (!game->map->data)
 		return (free_resources(game), 1);
 	create_map(game, filename);
-	game->window = mlx_new_window(game->mlx, game->map->width * TILE_SIZE,
+	game->win_ptr = mlx_new_window(game->mlx_ptr, game->map->width * TILE_SIZE,
 			game->map->height * TILE_SIZE, "So Long");
-	if (!game->window)
+	if (!game->win_ptr)
 		return (free_resources(game), 1);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_info	game;
+	t_game	game;
 
 	if (argc != 2)
 		handle_error(NULL, "Usage: ./so_long <map.filename>\n", 0);
@@ -94,10 +94,10 @@ int	main(int argc, char **argv)
 	if (!is_valid_path(&game))
 		handle_error(&game, "No valid path in map\n", 1);
 	render_map(&game);
-	mlx_hook(game.window, 2, 1L << 0, handle_keypress, &game);
-	mlx_hook(game.window, 17, 0, close_handler, &game);
-	mlx_expose_hook(game.window, handle_expose, &game);
-	mlx_loop(game.mlx);
+	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
+	mlx_hook(game.win_ptr, 17, 0, close_handler, &game);
+	mlx_expose_hook(game.win_ptr, handle_expose, &game);
+	mlx_loop(game.mlx_ptr);
 	return (EXIT_SUCCESS);
 }
 

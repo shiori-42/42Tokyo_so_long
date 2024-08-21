@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shiori <shiori@student.42.fr>              +#+  +:+       +#+        */
+/*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 13:26:03 by shiori           ###   ########.fr       */
+/*   Updated: 2024/08/21 14:07:07 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,33 +58,36 @@ int	validate_and_store_map(t_game *game, char *line, int *i)
 
 	len = ft_strlen(line);
 	if (len != game->map->width)
-	{	
-		while  (*i>=0)
-		{	
-			free(game->map->map[*i]);		
-			i--;	
-		}	
+	{
+		while (*i >= 0)
+		{
+			free(game->map->data[*i]);
+			i--;
+		}
 		free(line);
 		handle_error(game, "Failed map is not square\n", 1);
 	}
-	game->map->map[*i] = ft_strdup(line);
+	game->map->data[*i] = ft_strdup(line);
 	(*i)++;
 	if (*i == game->map->height)
 		check_map_borders_and_contents(game);
 	return (0);
 }
-char *get_next_line_trimmed(int fd)
-{
-    char *line = get_next_line(fd);
-    if (!line)
-        return NULL;
 
-    char *newline_pos = ft_strchr(line, '\n');
-    if (newline_pos)
-    {
-        *newline_pos = '\0';
-    }
-    return line;
+char	*get_next_line_trimmed(int fd)
+{
+	char	*line;
+	char	*newline_pos;
+
+	line = get_next_line(fd);
+	if (!line)
+		return (NULL);
+	newline_pos = ft_strchr(line, '\n');
+	if (newline_pos)
+	{
+		*newline_pos = '\0';
+	}
+	return (line);
 }
 
 int	create_map(t_game *game, char *filename)
@@ -102,7 +105,7 @@ int	create_map(t_game *game, char *filename)
 		line = get_next_line_trimmed(fd);
 		if (!line)
 			break ;
-		game->map->map[i + 1] = NULL;
+		game->map->data[i + 1] = NULL;
 		validate_and_store_map(game, line, &i);
 		free(line);
 	}

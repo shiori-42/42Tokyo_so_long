@@ -1,5 +1,5 @@
 NAME = so_long
-CC = cc　-fsanitize=address -g
+CC = cc
 
 # Common flags and directories
 MLX_DIR = mlx
@@ -22,18 +22,18 @@ OBJS = $(SRCS:.c=.o)
 # Detect the OS
 UNAME_S := $(shell uname -s)
 
-# Flags and libraries
-CFLAGS = -Werror
+# Common Flags
+CFLAGS = -Werror -Wall -Wextra
 
 # OS-specific settings
 ifeq ($(UNAME_S), Darwin)
-    CC = cc -Wall -Wextra
     CFLAGS += -I/opt/homebrew/Cellar/libx11/1.8.10/include -I/opt/homebrew/Cellar/libxext/1.3.6/include -DGL_SILENCE_DEPRECATION
     LIBS = -L/opt/homebrew/Cellar/libx11/1.8.10/lib -L/opt/homebrew/Cellar/libxext/1.3.6/lib -lXext -lX11 -framework OpenGL -framework AppKit
 else
-    CFLAGS += -Wall -Wextra -I/usr/include
+    CFLAGS += -I/usr/include
     LIBS = -L/usr/lib/X11 -lXext -lX11 -lm
 endif
+
 
 # Library targets
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -73,8 +73,8 @@ clean:
 
 # Full clean
 fclean: clean
-	$(MAKE) fclean -C $(LIBFT_DIR)
-	$(MAKE) clean -C $(MLX_DIR)
+	rm -rf $(LIBFT)
+	rm -rf $(MLX_LIB)
 	rm -f $(NAME)
 
 # Rebuild
