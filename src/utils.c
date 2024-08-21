@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 14:25:56 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 15:06:23 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,17 @@ void	free_window_and_map(t_game *game)
 		game->map = NULL;
 	}
 }
+
 void	free_resources(t_game *game)
 {
 	free_images(game);
 	free_window_and_map(game);
 }
+
 void	free_map_data(char **data, int height)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	while (i < height)
 	{

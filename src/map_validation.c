@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/21 14:06:56 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/21 15:11:29 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	check_map_borders(t_game *game)
 		}
 		y++;
 	}
-	printf("x:%d,y=%d", game->map->width, game->map->height);
-	printf("x:%d,y=%d", x, y);
 	return (0);
 }
 
