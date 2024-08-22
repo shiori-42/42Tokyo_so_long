@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 23:43:33 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:13:10 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ void	setup_game(t_game *game, char *filename)
 		handle_error(game, "Failed to allocate memory for map\n");
 	ft_memset(game->map, 0, sizeof(t_map));
 	count_map_size(filename, game);
+	game->map->data = malloc(game->map->height * sizeof(char *));
+	if (!game->map->data)
+		handle_error(game, "Failed to allocate memory for map data\n");
 	create_map(game, filename);
 	if (!game->map->data)
 		handle_error(game, "Failed to allocate memory for map data\n");
@@ -89,6 +92,7 @@ int	main(int argc, char **argv)
 	is_valid_path(&game);
 	render_map(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
+	mlx_hook(game.win_ptr, 17, 0, ft_exit, &game);
 	mlx_loop(game.mlx_ptr);
 	return (EXIT_SUCCESS);
 }

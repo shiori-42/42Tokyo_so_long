@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 18:39:44 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/21 23:40:26 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:50:29 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int				check_reachable_exit(t_game *game, int x, int y,
 					char **visited);
 int				count_reachable_collectibles(t_game *game, int x, int y,
 					char **visited);
-void			validate_and_store_map(t_game *game, char *line, int *i);
+int				validate_and_store_map(t_game *game, char *line, int *i);
 int				handle_expose(t_game *game);
 int				close_handler(t_game *game);
 void			free_map_data_until(char **data, int until);

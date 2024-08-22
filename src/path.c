@@ -12,27 +12,6 @@
 
 #include "so_long.h"
 
-// void	allocate_visited_memory(t_game *game, char ***visited)
-// {
-// 	int	y;
-
-// 	*visited = malloc((game->map->height) * sizeof(char *));
-// 	if (!*visited)
-// 		handle_error(game, "Failed to allocate memory for visited array\n");
-// 	y = 0;
-// 	while (y < game->map->height)
-// 	{
-// 		(*visited)[y] = malloc((game->map->width + 1) * sizeof(char));
-// 		if (!(*visited)[y])
-// 		{
-// 			free_double_pointer(*visited, y);
-// 			handle_error(game, "Failed to allocate memory for visited row\n");
-// 		}
-// 		ft_memset((*visited)[y], '0', game->map->width + 1);
-// 		y++;
-// 	}
-// }
-
 void	allocate_visited_memory(t_game *game, char ***visited)
 {
 	int	y;

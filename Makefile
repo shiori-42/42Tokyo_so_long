@@ -1,6 +1,6 @@
 NAME = so_long
 CC = cc
-# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 MLX_DIR = mlx
 LIBFT_DIR = libft

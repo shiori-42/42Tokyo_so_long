@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 23:40:08 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:20:22 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_double_pointer(char **ptr, int height)
 		y++;
 	}
 	free(ptr);
-	ptr = NULL;
 }
 
 void	free_images(t_game *game)
