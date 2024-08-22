@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/22 16:18:30 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:34:15 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	check_map_borders(t_game *game)
 	}
 }
 
-void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
+void	check_map_contents(t_game *game, int *player_count, int *exit_count,
 		int *items)
 {
 	int	x;
@@ -46,9 +46,9 @@ void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 		while (x < game->map->width)
 		{
 			if (game->map->data[y][x] == 'P')
-				(*player_cnt)++;
+				(*player_count)++;
 			else if (game->map->data[y][x] == 'E')
-				(*exit_cnt)++;
+				(*exit_count)++;
 			else if (game->map->data[y][x] == 'C')
 				(*items)++;
 			else if (game->map->data[y][x] != '0'
@@ -62,19 +62,23 @@ void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 
 void	check_map_borders_and_contents(t_game *game)
 {
-	int	player_cnt;
-	int	exit_cnt;
+	int	player_count;
+	int	exit_count;
 	int	item;
 
-	player_cnt = 0;
-	exit_cnt = 0;
+	player_count = 0;
+	exit_count = 0;
 	item = 0;
 	check_map_borders(game);
-	check_map_contents(game, &player_cnt, &exit_cnt, &item);
-	if (player_cnt != 1)
-		handle_error(game, "Invalid number of players\n");
-	if (exit_cnt != 1)
-		handle_error(game, "Invalid number of exits\n");
+	check_map_contents(game, &player_count, &exit_count, &item);
+	if (player_count == 0)
+		handle_error(game, "No player found on the map\n");
+	else if (player_count > 1)
+		handle_error(game, "Multiple players found on the map\n");
+	if (exit_count == 0)
+		handle_error(game, "No exit found on the map\n");
+	else if (exit_count > 1)
+		handle_error(game, "Multiple exits found on the map\n");
 	if (item < 1)
-		handle_error(game, "Invalid number of items\n");
+		handle_error(game, "The map must contain at least one item\n");
 }

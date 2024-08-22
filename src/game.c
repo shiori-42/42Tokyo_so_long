@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 16:14:43 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:13:12 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	init_game(t_game *game)
 	int	x;
 	int	y;
 
-	load_images(game);
 	game->collected = 0;
 	game->items = 0;
 	game->move_count = 0;

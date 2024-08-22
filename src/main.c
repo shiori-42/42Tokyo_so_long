@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 16:23:30 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:16:44 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,23 @@ void	winner(t_game *game)
 
 void	setup_game(t_game *game, char *filename)
 {
-	game->images = malloc(sizeof(t_images));
+	game->images = ft_calloc(1, sizeof(t_images));
 	if (!game->images)
 		handle_error(game, "Failed to allocate memory for images\n");
-	ft_memset(game->images, 0, sizeof(t_images));
-	game->map = malloc(sizeof(t_map));
+	game->map = ft_calloc(1, sizeof(t_map));
 	if (!game->map)
 		handle_error(game, "Failed to allocate memory for map\n");
-	ft_memset(game->map, 0, sizeof(t_map));
 	count_map_size(filename, game);
+	if (game->map->height == 0)
+		handle_error(game, "Failed to load empty map\n");
 	game->map->data = malloc(game->map->height * sizeof(char *));
 	if (!game->map->data)
 		handle_error(game, "Failed to allocate memory for map data\n");
 	create_map(game, filename);
 	if (!game->map->data)
 		handle_error(game, "Failed to allocate memory for map data\n");
+	init_game(game);
+	is_valid_path(game);
 	game->mlx_ptr = mlx_init();
 	if (!game->mlx_ptr)
 		handle_error(game, "Failed to initialize mlx\n");
@@ -88,8 +90,7 @@ int	main(int argc, char **argv)
 	ft_memset(&game, 0, sizeof(t_game));
 	check_file_name(argv[1]);
 	setup_game(&game, argv[1]);
-	init_game(&game);
-	is_valid_path(&game);
+	load_images(&game);
 	render_map(&game);
 	mlx_hook(game.win_ptr, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win_ptr, 17, 0, ft_exit, &game);

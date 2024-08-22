@@ -53,6 +53,8 @@ void	is_valid_path(t_game *game)
 	items_found = count_reachable_items(game, game->player_x, game->player_y,
 			visited);
 	free_double_pointer(visited, game->map->height);
-	if (!exit_found || items_found != game->items)
-		handle_error(game, "No valid path or missing items\n");
+	if (!exit_found)
+		handle_error(game, "No valid path\n");
+	if (items_found != game->items)
+		handle_error(game, "missing collectable items\n");
 }

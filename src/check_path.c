@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 16:05:19 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:05:47 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,13 @@ int	check_reachable_exit(t_game *game, int x, int y, char **visited)
 {
 	if (game->map->data[y][x] == 'E')
 		return (1);
+	if (!is_valid_move(game, x, y, visited))
+		return (0);
 	visited[y][x] = '1';
-	if (is_valid_move(game, x + 1, y, visited) && check_reachable_exit(game, x
-			+ 1, y, visited))
-		return (1);
-	if (is_valid_move(game, x - 1, y, visited) && check_reachable_exit(game, x
-			- 1, y, visited))
-		return (1);
-	if (is_valid_move(game, x, y + 1, visited) && check_reachable_exit(game, x,
-			y + 1, visited))
-		return (1);
-	if (is_valid_move(game, x, y - 1, visited) && check_reachable_exit(game, x,
-			y - 1, visited))
+	if (check_reachable_exit(game, x + 1, y, visited)
+		|| check_reachable_exit(game, x - 1, y, visited)
+		|| check_reachable_exit(game, x, y + 1, visited)
+		|| check_reachable_exit(game, x, y - 1, visited))
 		return (1);
 	return (0);
 }
@@ -43,14 +38,16 @@ int	count_reachable_items(t_game *game, int x, int y, char **visited)
 	int	count;
 
 	count = 0;
+	if (game->map->data[y][x] == 'E')
+		visited[y][x] = '1';
 	if (!is_valid_move(game, x, y, visited))
 		return (0);
 	visited[y][x] = '1';
 	if (game->map->data[y][x] == 'C')
 		count++;
-	count += count_reachable_items(game, x + 1, y, visited);
-	count += count_reachable_items(game, x - 1, y, visited);
-	count += count_reachable_items(game, x, y + 1, visited);
-	count += count_reachable_items(game, x, y - 1, visited);
+	count += count_reachable_items(game, x + 1, y, visited)
+		+ count_reachable_items(game, x - 1, y, visited)
+		+ count_reachable_items(game, x, y + 1, visited)
+		+ count_reachable_items(game, x, y - 1, visited);
 	return (count);
 }
