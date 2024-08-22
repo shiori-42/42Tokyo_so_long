@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 20:51:47 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 15:13:10 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:23:30 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	ft_exit(t_game *game)
 	ft_printf("                                             \n");
 	ft_printf("   Total moves made: %d                       \n",
 		game->move_count);
-	ft_printf("   Collectibles gathered: %d/%d                \n",
-		game->collected, game->collectibles);
+	ft_printf("   items gathered: %d/%d                \n", game->collected,
+		game->items);
 	ft_printf("-----------------------------------------------\n");
 	free_resources(game);
 	exit(EXIT_SUCCESS);
@@ -44,7 +44,7 @@ void	winner(t_game *game)
 {
 	ft_printf("-----------------------------------------------\n");
 	ft_printf("    🎉🎉🎉  Congratulations!!!!  🎉🎉🎉     \n");
-	ft_printf("    You found all collectibles and exit.     \n");
+	ft_printf("    You found all items and exit.     \n");
 	ft_printf("        ✓✓✓✓✓✓✓✓ You won! ✓✓✓✓✓✓✓✓           \n");
 	ft_printf("     Is %d moves the best you can do?         \n",
 		game->move_count);
@@ -55,9 +55,6 @@ void	winner(t_game *game)
 
 void	setup_game(t_game *game, char *filename)
 {
-	game->mlx_ptr = mlx_init();
-	if (!game->mlx_ptr)
-		handle_error(game, "Failed to initialize mlx\n");
 	game->images = malloc(sizeof(t_images));
 	if (!game->images)
 		handle_error(game, "Failed to allocate memory for images\n");
@@ -73,6 +70,9 @@ void	setup_game(t_game *game, char *filename)
 	create_map(game, filename);
 	if (!game->map->data)
 		handle_error(game, "Failed to allocate memory for map data\n");
+	game->mlx_ptr = mlx_init();
+	if (!game->mlx_ptr)
+		handle_error(game, "Failed to initialize mlx\n");
 	game->win_ptr = mlx_new_window(game->mlx_ptr, game->map->width * TILE_SIZE,
 			game->map->height * TILE_SIZE, "So Long");
 	if (!game->win_ptr)

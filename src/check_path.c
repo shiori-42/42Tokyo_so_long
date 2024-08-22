@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:30:16 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 13:48:17 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:05:19 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_reachable_exit(t_game *game, int x, int y, char **visited)
 	return (0);
 }
 
-int	count_reachable_collectibles(t_game *game, int x, int y, char **visited)
+int	count_reachable_items(t_game *game, int x, int y, char **visited)
 {
 	int	count;
 
@@ -48,9 +48,9 @@ int	count_reachable_collectibles(t_game *game, int x, int y, char **visited)
 	visited[y][x] = '1';
 	if (game->map->data[y][x] == 'C')
 		count++;
-	count += count_reachable_collectibles(game, x + 1, y, visited);
-	count += count_reachable_collectibles(game, x - 1, y, visited);
-	count += count_reachable_collectibles(game, x, y + 1, visited);
-	count += count_reachable_collectibles(game, x, y - 1, visited);
+	count += count_reachable_items(game, x + 1, y, visited);
+	count += count_reachable_items(game, x - 1, y, visited);
+	count += count_reachable_items(game, x, y + 1, visited);
+	count += count_reachable_items(game, x, y - 1, visited);
 	return (count);
 }

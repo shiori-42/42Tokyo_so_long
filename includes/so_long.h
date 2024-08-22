@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 18:39:44 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/22 14:50:29 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:25:23 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_images
 	void		*image_wall;
 	void		*image_empty;
 	void		*image_player;
-	void		*image_collectible;
+	void		*image_items;
 	void		*image_exit;
 }				t_images;
 
@@ -44,7 +44,7 @@ typedef struct s_game
 	int			player_x;
 	int			player_y;
 	int			collected;
-	int			collectibles;
+	int			items;
 	int			move_count;
 	t_map		*map;
 	t_images	*images;
@@ -54,7 +54,7 @@ typedef struct s_game
 # define WALL_XPM "assets/wall.xpm"
 # define EMPTY_XPM "assets/empty.xpm"
 # define PLAYER_XPM "assets/player.xpm"
-# define COLLECTIBLE_XPM "assets/collectible.xpm"
+# define ITEMS_XPM "assets/items.xpm"
 # define EXIT_XPM "assets/exit.xpm"
 # define TILE_SIZE 32
 
@@ -70,7 +70,6 @@ typedef struct s_game
 # define KEY_Q 113
 
 void			free_double_pointer(char **ptr, int height);
-void			free_string_array(char **ptr, int height);
 void			free_resources(t_game *game);
 void			handle_error(t_game *game, char *msg);
 int				ft_exit(t_game *game);
@@ -87,17 +86,14 @@ void			ft_move(t_game *game, int new_x, int new_y);
 void			winner(t_game *game);
 void			check_map_borders(t_game *game);
 void			check_map_contents(t_game *game, int *player_count,
-					int *exit_count, int *collected);
+					int *exit_count, int *items);
 int				is_valid_move(t_game *game, int x, int y, char **visited);
 int				check_reachable_exit(t_game *game, int x, int y,
 					char **visited);
-int				count_reachable_collectibles(t_game *game, int x, int y,
+int				count_reachable_items(t_game *game, int x, int y,
 					char **visited);
 int				validate_and_store_map(t_game *game, char *line, int *i);
-int				handle_expose(t_game *game);
-int				close_handler(t_game *game);
 void			free_map_data_until(char **data, int until);
-void			map_data_util(t_game *game, char *line, int i);
 char			*get_next_line_trimmed(int fd);
 
 #endif

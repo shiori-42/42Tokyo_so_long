@@ -37,7 +37,7 @@ void	is_valid_path(t_game *game)
 {
 	char	**visited;
 	int		exit_found;
-	int		collectibles_found;
+	int		items_found;
 	int		y;
 
 	visited = NULL;
@@ -50,9 +50,9 @@ void	is_valid_path(t_game *game)
 		ft_memset(visited[y], '0', game->map->width);
 		y++;
 	}
-	collectibles_found = count_reachable_collectibles(game, game->player_x,
-			game->player_y, visited);
+	items_found = count_reachable_items(game, game->player_x, game->player_y,
+			visited);
 	free_double_pointer(visited, game->map->height);
-	if (!exit_found || collectibles_found != game->collectibles)
-		handle_error(game, "No valid path or missing collectibles\n");
+	if (!exit_found || items_found != game->items)
+		handle_error(game, "No valid path or missing items\n");
 }

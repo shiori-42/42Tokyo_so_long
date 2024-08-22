@@ -1,5 +1,5 @@
 /* XPM */
-static char *collectible_resized[] = {
+static char *items_resized[] = {
 /* columns rows colors chars-per-pixel */
 "32 30 139 2 ",
 "   c None",

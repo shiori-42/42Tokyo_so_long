@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 21:27:11 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 15:03:05 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:02:51 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,11 @@ void	create_map(t_game *game, char *filename)
 		if (!line)
 			break ;
 		if (is_invalid)
-			free (line);
+			free(line);
 		else
 			is_invalid = validate_and_store_map(game, line, &i);
 	}
 	if (is_invalid)
-		handle_error(game, "Failed map is not square\n");
+		handle_error(game, "Failed map is not rectangular\n");
 	close(fd);
 }

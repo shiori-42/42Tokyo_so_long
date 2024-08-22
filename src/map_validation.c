@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:47:46 by syonekur          #+#    #+#             */
-/*   Updated: 2024/08/21 23:45:24 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:18:30 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	check_map_borders(t_game *game)
 }
 
 void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
-		int *collected)
+		int *items)
 {
 	int	x;
 	int	y;
@@ -50,7 +50,7 @@ void	check_map_contents(t_game *game, int *player_cnt, int *exit_cnt,
 			else if (game->map->data[y][x] == 'E')
 				(*exit_cnt)++;
 			else if (game->map->data[y][x] == 'C')
-				(*collected)++;
+				(*items)++;
 			else if (game->map->data[y][x] != '0'
 				&& game->map->data[y][x] != '1')
 				handle_error(game, "Invalid character in map\n");
@@ -64,13 +64,17 @@ void	check_map_borders_and_contents(t_game *game)
 {
 	int	player_cnt;
 	int	exit_cnt;
-	int	collected;
+	int	item;
 
 	player_cnt = 0;
 	exit_cnt = 0;
-	collected = 0;
+	item = 0;
 	check_map_borders(game);
-	check_map_contents(game, &player_cnt, &exit_cnt, &collected);
-	if (player_cnt != 1 || exit_cnt != 1 || collected < 1)
-		handle_error(game, "Invalid number of players,exits,or collectibles\n");
+	check_map_contents(game, &player_cnt, &exit_cnt, &item);
+	if (player_cnt != 1)
+		handle_error(game, "Invalid number of players\n");
+	if (exit_cnt != 1)
+		handle_error(game, "Invalid number of exits\n");
+	if (item < 1)
+		handle_error(game, "Invalid number of items\n");
 }

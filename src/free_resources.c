@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:11:50 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/22 14:20:22 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:05:32 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	free_images(t_game *game)
 		mlx_destroy_image(game->mlx_ptr, game->images->image_empty);
 	if (game->images->image_player)
 		mlx_destroy_image(game->mlx_ptr, game->images->image_player);
-	if (game->images->image_collectible)
-		mlx_destroy_image(game->mlx_ptr, game->images->image_collectible);
+	if (game->images->image_items)
+		mlx_destroy_image(game->mlx_ptr, game->images->image_items);
 	if (game->images->image_exit)
 		mlx_destroy_image(game->mlx_ptr, game->images->image_exit);
 }

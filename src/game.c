@@ -6,7 +6,7 @@
 /*   By: syonekur <syonekur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 17:35:40 by shiori            #+#    #+#             */
-/*   Updated: 2024/08/21 16:20:51 by syonekur         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:14:43 by syonekur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	load_images(t_game *game)
 			&width, &height);
 	game->images->image_player = mlx_xpm_file_to_image(game->mlx_ptr,
 			PLAYER_XPM, &width, &height);
-	game->images->image_collectible = mlx_xpm_file_to_image(game->mlx_ptr,
-			COLLECTIBLE_XPM, &width, &height);
+	game->images->image_items = mlx_xpm_file_to_image(game->mlx_ptr, ITEMS_XPM,
+			&width, &height);
 	game->images->image_exit = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_XPM,
 			&width, &height);
 	if (!game->images->image_wall || !game->images->image_empty
-		|| !game->images->image_player || !game->images->image_collectible
+		|| !game->images->image_player || !game->images->image_items
 		|| !game->images->image_exit)
 		handle_error(game, "Failed to load textures\n");
 }
@@ -40,7 +40,7 @@ void	init_game(t_game *game)
 
 	load_images(game);
 	game->collected = 0;
-	game->collectibles = 0;
+	game->items = 0;
 	game->move_count = 0;
 	y = -1;
 	while (++y < game->map->height)
@@ -55,7 +55,7 @@ void	init_game(t_game *game)
 			}
 			else if (game->map->data[y][x] == 'C')
 			{
-				game->collectibles++;
+				game->items++;
 			}
 		}
 	}
@@ -72,7 +72,7 @@ void	ft_move(t_game *game, int new_x, int new_y)
 	}
 	if (game->map->data[new_y][new_x] == 'E')
 	{
-		if (game->collected == game->collectibles)
+		if (game->collected == game->items)
 			winner(game);
 		return ;
 	}
@@ -125,7 +125,7 @@ void	render_map(t_game *game)
 			else if (game->map->data[y][x] == '0')
 				image = game->images->image_empty;
 			else if (game->map->data[y][x] == 'C')
-				image = game->images->image_collectible;
+				image = game->images->image_items;
 			else if (game->map->data[y][x] == 'E')
 				image = game->images->image_exit;
 			else if (game->map->data[y][x] == 'P')
